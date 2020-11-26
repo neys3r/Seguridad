@@ -318,4 +318,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return fecha;
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finishAffinity();
+    }
+
 }

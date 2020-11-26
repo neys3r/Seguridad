@@ -86,15 +86,11 @@ public class MainInicio extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Peatonal",Toast.LENGTH_LONG).show();
                     edtPlaca.setVisibility(View.INVISIBLE);
                 }
-
             }
 
         });
 
         // Fin Validación Radio
-
-
-
 
         btnInicio.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -227,54 +223,6 @@ public class MainInicio extends AppCompatActivity {
                             break;
                     }
                 }
-
-
-                //idSucursal = spinner.getSelectedItem().toString();
-
-/*
-                if( spinner.getSelectedItem().toString().equals("Seleccionar Sucursal")  ){
-                    Toast.makeText(getApplicationContext(),"Seleccionar una Sucursal válida:T-"+tipoIngreso,Toast.LENGTH_LONG).show();
-
-                }else {
-                    if ( radio_bus.isChecked() == true || radio_vehiculo.isChecked() == true || longitud == 6 ) {
-                        Toast.makeText(getApplicationContext(),"Seleccionar una placa válida :T-"+tipoIngreso,Toast.LENGTH_LONG).show();
-                        Toast.makeText(getApplicationContext(),"Opción B"+tipoIngreso,Toast.LENGTH_LONG).show();
-
-                    }
-                    else {
-                        if ( longitud != 6 ){
-                            Toast.makeText(getApplicationContext(),"Seleccionar una placa válida de 6 dígitos:T-"+tipoIngreso,Toast.LENGTH_LONG).show();
-
-                        }
-                        else
-                        mensaje = "Placa " + placaBus + "en Sede "+ idSucursal +" grabado ";
-
-                        Toast.makeText(getApplicationContext(),mensaje+"CC",Toast.LENGTH_LONG).show();
-
-
-                        Intent i =new Intent(getApplicationContext(),MainActivity.class);
-                        i.putExtra("placaBus", placaBus);
-                        i.putExtra("idSucursal", idSucursal);
-                        i.putExtra("dscSucursal", dscSucursal);
-                        i.putExtra("tipoIngreso", tipoIngreso);
-                        startActivity(i);
-                    }
-                }
-
-
-
-                */
-
-
-                // Prueba Switch
-
-
-
-
-
-
-
-
 
             }
         });
