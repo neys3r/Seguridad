@@ -18,6 +18,7 @@ import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView tvFecha, tvBus, tvSucursal, tvConteoSN, tvConteoNS, tvHostname, tvTitulo;
     private String codPDA, tipoIS;
     private LinearLayout linearRegistro;
+    private ImageView ivLogoTipo;
 
 
 
@@ -121,8 +123,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         codPDA = bundle.getString("codPDA");
         tipoIS = bundle.getString("tipoIS");
 
+        /*
+        if (tipoIS == "0")
+            ivLogoTipo.setBackgroundResource(R.drawable.ingreso);
+        else
+            ivLogoTipo.setBackgroundResource(R.drawable.salida);
 
-
+*/
 
 
 
