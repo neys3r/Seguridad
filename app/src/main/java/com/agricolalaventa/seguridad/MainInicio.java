@@ -1,0 +1,285 @@
+package com.agricolalaventa.seguridad;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.InputFilter;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class MainInicio extends AppCompatActivity {
+
+    private TextView tvTitInicio, tvFechaInicio;
+    private EditText edtSucursal, edtPlaca;
+    private Button btnInicio;
+    private String placaBus, dscSucursal, idSucursal, tipoIngreso, mensaje;
+    private int longitud;
+    private Spinner spinner;
+    private RadioButton  radio_bus, radio_moto, radio_vehiculo, radio_peatonal;
+    private RadioGroup radio_opciones;
+    private TextView codPdaAcceso;
+    private String codPDA, tipoIS, descIS;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_inicio);
+
+        tvTitInicio = (TextView)findViewById(R.id.tvTitInicio);
+        tvFechaInicio = (TextView)findViewById(R.id.tvFechaInicio);
+
+        //edtSucursal = (EditText) findViewById(R.id.edtSucursal);
+        edtPlaca = (EditText)findViewById(R.id.edtPlaca);
+        btnInicio = (Button)findViewById(R.id.btnInicio);
+        spinner = (Spinner)findViewById(R.id.spinner);
+
+        radio_opciones = (RadioGroup) findViewById(R.id.radio_opciones);
+        radio_bus = (RadioButton)findViewById(R.id.radio_bus);
+        radio_moto = (RadioButton)findViewById(R.id.radio_moto);
+        radio_vehiculo = (RadioButton)findViewById(R.id.radio_vehiculo);
+        radio_peatonal = (RadioButton)findViewById(R.id.radio_peatonal);
+
+        // Recogemos codPDA del activity Pedateador
+        Bundle bundle = getIntent().getExtras();
+        codPDA = bundle.getString("codPDA");
+        tipoIS = bundle.getString("tipoIS");
+        descIS = bundle.getString("descIS");
+        //codPdaAcceso.setText(codPDA);
+
+        boolean estado = radio_moto.isChecked();
+
+        String [] opciones = {"Seleccionar Sucursal", "Pinilla", "Mayorazgo", "Don Jorge", "San Judas"};
+        ArrayAdapter <String> adapterS = new ArrayAdapter<String>(this,R.layout.spinner_item_sucursal, opciones);
+        spinner.setAdapter(adapterS);
+
+        tvTitInicio.setText("Registro de "+descIS);
+
+        edtPlaca.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
+
+        // Validaciones Radio
+
+        radio_opciones.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
+
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // TODO Auto-generated method stub
+                if (checkedId == R.id.radio_bus){
+                    Toast.makeText(getApplicationContext(),"Bus",Toast.LENGTH_LONG).show();
+                    edtPlaca.setVisibility(View.VISIBLE);
+                    edtPlaca.setHint("Placa Bus");
+                }else if (checkedId == R.id.radio_moto){
+                    Toast.makeText(getApplicationContext(),"Moto",Toast.LENGTH_LONG).show();
+                    edtPlaca.setVisibility(View.INVISIBLE);
+                }else if (checkedId == R.id.radio_vehiculo){
+                    Toast.makeText(getApplicationContext(),"Vehiculo",Toast.LENGTH_LONG).show();
+                    edtPlaca.setVisibility(View.VISIBLE);
+                    edtPlaca.setHint("Placa Vehiculo");
+                }else if (checkedId == R.id.radio_peatonal){
+                    Toast.makeText(getApplicationContext(),"Peatonal",Toast.LENGTH_LONG).show();
+                    edtPlaca.setVisibility(View.INVISIBLE);
+                }
+
+            }
+
+        });
+
+        // Fin Validación Radio
+
+
+
+
+        btnInicio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                placaBus = edtPlaca.getText().toString();
+                //idSucursal = edtSucursal.getText().toString();
+                longitud = edtPlaca.getText().toString().length();
+
+                String seleccion = spinner.getSelectedItem().toString();
+
+                if (seleccion.equals("Pinilla")){
+                    idSucursal = "006";
+                    dscSucursal = "Pinilla";
+                } else if (seleccion.equals("Mayorazgo")){
+                    idSucursal = "001";
+                    dscSucursal = "Mayorazgo";
+                } else if (seleccion.equals("Don Jorge")){
+                    idSucursal = "023";
+                    dscSucursal = "Don Jorge";
+                }else if(seleccion.equals("San Judas")){
+                    idSucursal = "034";
+                    dscSucursal = "San Judas";
+                }else{
+                    idSucursal = "999";
+                    dscSucursal = "Sin Sucursal";
+                }
+
+                // Seleccionar tipo de ingreso
+
+                if (radio_bus.isChecked() == true){
+                    tipoIngreso = "1";
+                } else if (radio_moto.isChecked() == true){
+                    tipoIngreso = "2";
+                } else if (radio_vehiculo.isChecked() == true){
+                    tipoIngreso = "3";
+                } else if (radio_peatonal.isChecked() == true){
+                    tipoIngreso = "4";
+                }else{
+                    tipoIngreso = "9";
+                }
+
+
+
+                if (spinner.getSelectedItem().toString().equals("Seleccionar Sucursal")){
+                    Toast.makeText(getApplicationContext(),"Seleccionar seleccionar una Sucursal",Toast.LENGTH_LONG).show();
+                } else{
+                    //Toast.makeText(getApplicationContext(),"Seleccionar válida:T-"+tipoIngreso,Toast.LENGTH_LONG).show();
+                    switch (tipoIngreso){
+                        case  "1":
+
+                            if (longitud != 6 ){
+                                Toast.makeText(getApplicationContext(),"La placa del bus de tener 6 dígitos",Toast.LENGTH_LONG).show();
+                            } else {
+                                //Muestra la lista de BUS
+                                mensaje = "Placa " + placaBus + "en Sede "+ idSucursal +" grabado ";
+                                Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
+
+                                Intent a1 =new Intent(getApplicationContext(),MainActivity.class);
+                                a1.putExtra("placaBus", placaBus);
+                                a1.putExtra("idSucursal", idSucursal);
+                                a1.putExtra("dscSucursal", dscSucursal);
+                                a1.putExtra("tipoIngreso", tipoIngreso);
+                                a1.putExtra("codPDA", codPDA);
+                                a1.putExtra("tipoIS", tipoIS);
+                                startActivity(a1);
+                            }
+
+                            break;
+                        case  "2":
+                            //Muestra la lista de MOTO
+
+                                //Muestra la lista de BUS
+                                mensaje = "Moto en Sede "+ idSucursal +" grabado ";
+                                Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
+
+                                Intent a2 =new Intent(getApplicationContext(),MainActivity.class);
+                                a2.putExtra("placaBus", "MMMMMM");
+                                a2.putExtra("idSucursal", idSucursal);
+                                a2.putExtra("dscSucursal", dscSucursal);
+                                a2.putExtra("tipoIngreso", tipoIngreso);
+                                a2.putExtra("codPDA", codPDA);
+                                a2.putExtra("tipoIS", tipoIS);
+                                startActivity(a2);
+
+                            break;
+                        case  "3":
+                            //Muestra la lista de Frutas
+
+                            if (longitud != 6 ){
+                                Toast.makeText(getApplicationContext(),"La placa del vehículo de tener 6 dígitos",Toast.LENGTH_LONG).show();
+                            } else {
+                                //Muestra la lista de VEHICULO
+                                mensaje = "Placa " + placaBus + "en Sede "+ idSucursal +" grabado ";
+                                Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
+
+                                Intent a3 =new Intent(getApplicationContext(),MainActivity.class);
+                                a3.putExtra("placaBus", placaBus);
+                                a3.putExtra("idSucursal", idSucursal);
+                                a3.putExtra("dscSucursal", dscSucursal);
+                                a3.putExtra("tipoIngreso", tipoIngreso);
+                                a3.putExtra("codPDA", codPDA);
+                                a3.putExtra("tipoIS", tipoIS);
+                                startActivity(a3);
+                            }
+                            break;
+                        case  "4":
+                            //Muestra la lista de Frutas
+
+                            mensaje = "Lista de Personal  " + "en Sede "+ idSucursal +" grabado ";
+                            Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
+
+                            Intent a4 =new Intent(getApplicationContext(),MainActivity.class);
+                            a4.putExtra("placaBus", "PPPPPP");
+                            a4.putExtra("idSucursal", idSucursal);
+                            a4.putExtra("dscSucursal", dscSucursal);
+                            a4.putExtra("tipoIngreso", tipoIngreso);
+                            a4.putExtra("codPDA", codPDA);
+                            a4.putExtra("tipoIS", tipoIS);
+                            startActivity(a4);
+
+                            break;
+                        default:
+                            //Muestra mensaje: "Ingresa un valor valido"
+                            Toast.makeText(getApplicationContext(),"Debes elegir un tipo de Ingreso válido",Toast.LENGTH_LONG).show();
+                            break;
+                    }
+                }
+
+
+                //idSucursal = spinner.getSelectedItem().toString();
+
+/*
+                if( spinner.getSelectedItem().toString().equals("Seleccionar Sucursal")  ){
+                    Toast.makeText(getApplicationContext(),"Seleccionar una Sucursal válida:T-"+tipoIngreso,Toast.LENGTH_LONG).show();
+
+                }else {
+                    if ( radio_bus.isChecked() == true || radio_vehiculo.isChecked() == true || longitud == 6 ) {
+                        Toast.makeText(getApplicationContext(),"Seleccionar una placa válida :T-"+tipoIngreso,Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"Opción B"+tipoIngreso,Toast.LENGTH_LONG).show();
+
+                    }
+                    else {
+                        if ( longitud != 6 ){
+                            Toast.makeText(getApplicationContext(),"Seleccionar una placa válida de 6 dígitos:T-"+tipoIngreso,Toast.LENGTH_LONG).show();
+
+                        }
+                        else
+                        mensaje = "Placa " + placaBus + "en Sede "+ idSucursal +" grabado ";
+
+                        Toast.makeText(getApplicationContext(),mensaje+"CC",Toast.LENGTH_LONG).show();
+
+
+                        Intent i =new Intent(getApplicationContext(),MainActivity.class);
+                        i.putExtra("placaBus", placaBus);
+                        i.putExtra("idSucursal", idSucursal);
+                        i.putExtra("dscSucursal", dscSucursal);
+                        i.putExtra("tipoIngreso", tipoIngreso);
+                        startActivity(i);
+                    }
+                }
+
+
+
+                */
+
+
+                // Prueba Switch
+
+
+
+
+
+
+
+
+
+            }
+        });
+
+
+
+
+    }
+
+
+
+}

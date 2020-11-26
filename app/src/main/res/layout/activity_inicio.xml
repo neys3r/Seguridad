@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainInicio">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Registro de Personal"
+            android:textSize="30dp"
+            android:id="@+id/tvTitInicio"
+            android:layout_margin="15dp"
+            android:textAlignment="center"
+            android:gravity="center_horizontal" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioGroup
+                android:id="@+id/radio_opciones"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radio_bus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:drawableEnd="@drawable/ic_bus"
+                    android:gravity="center_horizontal"
+                    android:textAlignment="center" />
+
+                <RadioButton
+                    android:id="@+id/radio_moto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:drawableEnd="@drawable/ic_moto"
+                    android:gravity="center_horizontal"
+                    android:textAlignment="center" />
+
+                <RadioButton
+                    android:id="@+id/radio_vehiculo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:drawableEnd="@drawable/ic_auto"
+                    android:gravity="center_horizontal"
+                    android:textAlignment="center" />
+
+                <RadioButton
+                    android:id="@+id/radio_peatonal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:drawableEnd="@drawable/ic_peatonal"
+                    android:gravity="center_horizontal"
+                    android:textAlignment="center" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="30dp"
+            android:id="@+id/tvFechaInicio"
+            android:layout_margin="15dp"
+            android:textAlignment="center"
+            android:gravity="center_horizontal" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edtPlaca"
+            android:inputType="text"
+            android:hint="PLACA BUS"
+            android:textSize="20dp"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnInicio"
+            android:text="Guardar"/>
+
+
+    </LinearLayout>
+
+</RelativeLayout>
