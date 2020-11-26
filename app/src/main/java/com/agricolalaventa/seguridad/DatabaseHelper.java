@@ -90,7 +90,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getNames() {
         SQLiteDatabase db = this.getReadableDatabase();
         //String sql = "SELECT id, Substr(name,32,8) as name  FROM names WHERE LENGTH(NAME) = 39 order by id";
-        String sql = "SELECT id, Substr(name,32,8) as name, status, dni, placa FROM " + TABLE_NAME + " WHERE LENGTH(NAME) > 30 and substr( name, 1, 10 ) = strftime('%Y-%m-%d','now') order by id";
+        String sql = "SELECT id, Substr(name,45,8) as name, status, dni, placa FROM " + TABLE_NAME + " WHERE LENGTH(NAME) > 30 and substr( name, 1, 10 ) = strftime('%Y-%m-%d','now') order by id";
         //String sql = "SELECT * FROM " + TABLE_NAME + " WHERE LENGTH(NAME) = 39 ORDER BY " + COLUMN_ID + " ASC;";
         Cursor c = db.rawQuery(sql, null);
         return c;

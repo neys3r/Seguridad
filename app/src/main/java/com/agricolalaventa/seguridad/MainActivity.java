@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText editTextName;
     private ListView listViewNames;
     private TextView tvFecha, tvBus, tvSucursal, tvConteoSN, tvConteoNS, tvHostname, tvTitulo;
-    private String codPDA, tipoIS;
+    private String codPDA, tipoIS, descIS;
     private LinearLayout linearRegistro;
     private ImageView ivLogoTipo;
 
@@ -122,20 +122,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tipoIngreso = bundle.getString("tipoIngreso");
         codPDA = bundle.getString("codPDA");
         tipoIS = bundle.getString("tipoIS");
-
-        /*
-        if (tipoIS == "0")
-            ivLogoTipo.setBackgroundResource(R.drawable.ingreso);
-        else
-            ivLogoTipo.setBackgroundResource(R.drawable.salida);
-
-*/
-
+        descIS = bundle.getString("descIS");
 
 
         tvBus.setText(placaBus);
         tvSucursal.setText(dscSucursal);
-        tvTitulo.setText(tipoIS);
+        tvTitulo.setText("Registro de "+descIS);
        // tvConteo.setText(conteo);
 
         tvConteoSN.setText(db.totalSync());

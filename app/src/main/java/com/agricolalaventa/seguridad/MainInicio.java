@@ -160,6 +160,7 @@ public class MainInicio extends AppCompatActivity {
                                 a1.putExtra("tipoIngreso", tipoIngreso);
                                 a1.putExtra("codPDA", codPDA);
                                 a1.putExtra("tipoIS", tipoIS);
+                                a1.putExtra("descIS", descIS);
                                 startActivity(a1);
                             }
 
@@ -178,6 +179,7 @@ public class MainInicio extends AppCompatActivity {
                                 a2.putExtra("tipoIngreso", tipoIngreso);
                                 a2.putExtra("codPDA", codPDA);
                                 a2.putExtra("tipoIS", tipoIS);
+                                a2.putExtra("descIS", descIS);
                                 startActivity(a2);
 
                             break;
@@ -198,6 +200,7 @@ public class MainInicio extends AppCompatActivity {
                                 a3.putExtra("tipoIngreso", tipoIngreso);
                                 a3.putExtra("codPDA", codPDA);
                                 a3.putExtra("tipoIS", tipoIS);
+                                a3.putExtra("descIS", descIS);
                                 startActivity(a3);
                             }
                             break;
@@ -214,6 +217,7 @@ public class MainInicio extends AppCompatActivity {
                             a4.putExtra("tipoIngreso", tipoIngreso);
                             a4.putExtra("codPDA", codPDA);
                             a4.putExtra("tipoIS", tipoIS);
+                            a4.putExtra("descIS", descIS);
                             startActivity(a4);
 
                             break;
