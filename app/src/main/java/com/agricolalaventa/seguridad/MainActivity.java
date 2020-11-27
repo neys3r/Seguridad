@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.InputType;
 import android.text.format.DateFormat;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,8 +50,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     //public static final String URL_SAVE_NAME = "http://192.168.1.15/SqliteSync/saveName.php";
-    public static final String URL_SAVE_NAME = "http://wslaventa.agricolalaventa.com/wstest.php";
-    //public static final String URL_SAVE_NAME = "http://wslaventa.agricolalaventa.com/wscampo.php";
+    //public static final String URL_SAVE_NAME = "http://wslaventa.agricolalaventa.com/wstest.php";
+    public static final String URL_SAVE_NAME = "http://wslaventa.agricolalaventa.com/wscampo.php";
 
     //database helper object
     private DatabaseHelper db;
@@ -113,6 +115,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //adding click listener to button
         buttonSave.setOnClickListener(this);
+
+        // Prueba de Enter en PDA
+        /*
+        editTextName.setOnKeyListener(new View.OnKeyListener(){
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && ( keyCode==KeyEvent.KEYCODE_ENTER))  {
+                    switch (keyCode) {
+                        case KeyEvent.KEYCODE_DPAD_CENTER:
+                        case KeyEvent.KEYCODE_ENTER:
+                            saveNameToServer();
+                            editTextName.forceLayout();
+                            editTextName.setText("");
+                            editTextName.forceLayout();
+                            Log.i("edtDNI", "enter pressed");
+                            return true;
+                        default:
+                            break;
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+
+*/
+
 
         // Recogemos placaBus y idSucursal de MainInicio
         Bundle bundle = getIntent().getExtras();
