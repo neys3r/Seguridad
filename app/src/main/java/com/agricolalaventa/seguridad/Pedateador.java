@@ -2,7 +2,9 @@ package com.agricolalaventa.seguridad;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.KeyEvent;
@@ -40,6 +42,11 @@ public class Pedateador extends AppCompatActivity {
         radio_tipo = (RadioGroup) findViewById(R.id.radio_tipo);
         radio_ingreso = (RadioButton)findViewById(R.id.radio_ingreso);
         radio_salida = (RadioButton)findViewById(R.id.radio_salida);
+
+
+        // Sharepreference
+        SharedPreferences preferences = getSharedPreferences("datos", Context.MODE_PRIVATE);
+        edtVigilante.setText(preferences.getString("dni", ""));
 
         // Impedir Ingreso manual de DNI
         edtVigilante.setInputType(InputType.TYPE_NULL);
@@ -83,6 +90,11 @@ public class Pedateador extends AppCompatActivity {
 
                 codPDA = edtVigilante.getText().toString();
                 longitud = edtVigilante.getText().toString().length();
+
+                SharedPreferences preferencias = getSharedPreferences("datos", Context.MODE_PRIVATE);
+                SharedPreferences.Editor Obj_editor = preferencias.edit();
+                Obj_editor.putString("dni", edtVigilante.getText().toString());
+                Obj_editor.commit();
 
                 // Verificar check
 
@@ -176,6 +188,8 @@ public class Pedateador extends AppCompatActivity {
                 }
             }
         });
+
+
 
     }
 

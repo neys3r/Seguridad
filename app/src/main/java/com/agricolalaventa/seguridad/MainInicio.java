@@ -177,6 +177,7 @@ public class MainInicio extends AppCompatActivity {
                                 a2.putExtra("tipoIS", tipoIS);
                                 a2.putExtra("descIS", descIS);
                                 startActivity(a2);
+                                //finish();
 
                             break;
                         case  "3":
