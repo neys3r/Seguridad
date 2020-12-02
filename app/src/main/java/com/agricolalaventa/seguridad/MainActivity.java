@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private NetworkStateChecker nt;
 
     //View objects
-    private Button buttonSave, btnSync;
+    private Button buttonSave, btnSync, btnRepo01;
     private EditText editTextName;
     private ListView listViewNames;
     private TextView tvFecha, tvBus, tvSucursal, tvConteoSN, tvConteoNS, tvHostname, tvTitulo;
@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         buttonSave = (Button) findViewById(R.id.buttonSave);
         btnSync = (Button) findViewById(R.id.btnSync);
+        btnRepo01 = (Button) findViewById(R.id.btnRepo01);
         editTextName = (EditText) findViewById(R.id.editTextName);
         listViewNames = (ListView) findViewById(R.id.listViewNames);
         tvTitulo = (TextView) findViewById(R.id.tvTitulo);
@@ -142,6 +143,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         );
                     } while (cursor.moveToNext());
                 }
+            }
+        });
+
+
+        btnRepo01.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i =new Intent(getApplicationContext(),an_reporteplaca.class);
+                startActivity(i);
             }
         });
 

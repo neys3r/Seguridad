@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".an_reporteplaca">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Reporte de Asistencia"
+            android:textSize="30dp"
+            android:layout_margin="15dp"
+            android:textAlignment="center"
+            android:gravity="center_horizontal" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:background="#4CAF50"
+                android:id="@+id/btnRegAsistencia"
+                android:text="Registro"
+                android:textColor="#FFFFFF"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/tvCantTPlaca"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:layout_margin="15dp"
+                android:textAlignment="center"
+                android:gravity="center_horizontal" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/repoplaca_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dividerHeight="1dp"
+            android:layout_below="@+id/tvCantTPlaca"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

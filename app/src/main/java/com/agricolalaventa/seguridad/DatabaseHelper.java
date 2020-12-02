@@ -7,11 +7,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.format.DateFormat;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     //Constants for Database name, table name, and column names
     public static final String DB_NAME = "security.db";
     public static final String TABLE_NAME = "names";
+    public static final String VIEW_REPO01 = "repo01";
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_STATUS = "status";
@@ -49,6 +53,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 " VARCHAR, " + COLUMN_IDTIPO +
                 " VARCHAR);";
         db.execSQL(sql);
+        String sql2 = "CREATE VIEW " + VIEW_REPO01 + " as SELECT placa, count(1) as cantidad FROM names group by placa ";
+        db.execSQL(sql2);
+
+
     }
 
     //upgrading the database
@@ -150,6 +158,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }while (cursor.moveToNext());
         }
         return lsViaje;
+    }
+
+    public String qrepo01(){
+        String lsViaje="0";
+        String sql="select placa, cantidad from repo01 ";
+        SQLiteDatabase db= getReadableDatabase();
+        Cursor cursor= db.rawQuery(sql, null);
+        if(cursor.moveToFirst()){
+            do {
+                lsViaje = cursor.getString(0);
+            }while (cursor.moveToNext());
+        }
+        return lsViaje;
+    }
+
+    public ArrayList<HashMap<String, String>> qrepo02(){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ArrayList<HashMap<String, String>> userList = new ArrayList<>();
+
+        String query = "select placa, cantidad from repo01 ";
+        Cursor cursor = db.rawQuery(query,null);
+        while (cursor.moveToNext()){
+            HashMap<String,String> user = new HashMap<>();
+            user.put("placa",cursor.getString(cursor.getColumnIndex("placa")));
+            user.put("cantidad",cursor.getString(cursor.getColumnIndex("cantidad")));
+            userList.add(user);
+        }
+        return  userList;
     }
 
     public String totalSync(){

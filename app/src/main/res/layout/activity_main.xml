@@ -167,8 +167,14 @@
             android:text="Registro de Personal"
             android:textAlignment="center"
             android:textSize="25dp"
-            android:layout_weight="3"
+            android:layout_weight="10"
             android:gravity="center_horizontal" />
+
+        <Button
+            android:id="@+id/btnRepo01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reporte" />
 
     </LinearLayout>
 
