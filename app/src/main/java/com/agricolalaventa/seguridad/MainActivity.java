@@ -54,10 +54,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //public static final String URL_SAVE_NAME = "http://wslaventa.agricolalaventa.com/wscampo.php";
 
     //database helper object
+    private Context context;
     private DatabaseHelper db;
+    private NetworkStateChecker nt;
 
     //View objects
-    private Button buttonSave;
+    private Button buttonSave, btnSync;
     private EditText editTextName;
     private ListView listViewNames;
     private TextView tvFecha, tvBus, tvSucursal, tvConteoSN, tvConteoNS, tvHostname, tvTitulo;
@@ -98,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         names = new ArrayList<>();
 
         buttonSave = (Button) findViewById(R.id.buttonSave);
+        btnSync = (Button) findViewById(R.id.btnSync);
         editTextName = (EditText) findViewById(R.id.editTextName);
         listViewNames = (ListView) findViewById(R.id.listViewNames);
         tvTitulo = (TextView) findViewById(R.id.tvTitulo);
@@ -115,6 +118,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //adding click listener to button
         buttonSave.setOnClickListener(this);
+
+
+        btnSync.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Cursor cursor = db.getUnsyncedNames();
+                //NetworkStateChecker netw = nt.saveName();
+                if (cursor.moveToFirst()) {
+                    do {
+                        //calling the method to save the unsynced name to MySQL
+                        saveNameMA(
+                                cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_ID)),
+                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME)),
+                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DNI)),
+                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_PLACA)),
+                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IDSUCURSAL)),
+                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_HOSTNAME)),
+                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_FECHAREGISTRO)),
+                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_PEDATEADOR)),
+                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IDTRASLADO)),
+                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IDTIPO))
+                        );
+                    } while (cursor.moveToNext());
+                }
+            }
+        });
 
         // Prueba de Enter en PDA
         /*
@@ -371,6 +400,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onPause() {
         super.onPause();
         finishAffinity();
+    }
+
+    private void saveNameMA(final int id, final String name, final String dni, final String placa, final String idsucursal, final String hostname, final String fecharegistro, final String pedateador, final String idtraslado, final String idtipo ) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, MainActivity.URL_SAVE_NAME,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject obj = new JSONObject(response);
+                            if (!obj.getBoolean("error")) {
+                                //updating the status in sqlite
+                                db.updateNameStatus(id, MainActivity.NAME_SYNCED_WITH_SERVER);
+
+                                //sending the broadcast to refresh the list
+                                context.sendBroadcast(new Intent(MainActivity.DATA_SAVED_BROADCAST));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("name", name);
+                params.put("dni", dni);
+                params.put("placa", placa);
+                params.put("idsucursal", idsucursal);
+                params.put("hostname", hostname);
+                params.put("fecharegistro", fecharegistro);
+                params.put("pedateador", pedateador);
+                params.put("idtraslado", idtraslado);
+                params.put("idtipo", idtipo);
+                return params;
+            }
+        };
+
+        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
 
 }
