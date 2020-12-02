@@ -50,8 +50,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     //public static final String URL_SAVE_NAME = "http://192.168.1.15/SqliteSync/saveName.php";
-    //public static final String URL_SAVE_NAME = "http://wslaventa.agricolalaventa.com/wstest.php";
-    public static final String URL_SAVE_NAME = "http://wslaventa.agricolalaventa.com/wscampo.php";
+    public static final String URL_SAVE_NAME = "http://wslaventa.agricolalaventa.com/wstest.php";
+    //public static final String URL_SAVE_NAME = "http://wslaventa.agricolalaventa.com/wscampo.php";
 
     //database helper object
     private DatabaseHelper db;
@@ -199,7 +199,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME)),
                         cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_STATUS)),
                         cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DNI)),
-                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_PLACA))
+                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_PLACA)),
+                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IDSUCURSAL)),
+                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_HOSTNAME)),
+                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_FECHAREGISTRO)),
+                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_PEDATEADOR)),
+                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IDTRASLADO)),
+                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IDTIPO))
                 );
                 names.add(name);
             } while (cursor.moveToNext());
@@ -229,9 +235,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //tvFecha.setText(fechaLectura);
 
-        final String name = fechaActual()+"|"+idSucursal+"|"+placaBus+"|"+tipoIngreso+"|"+tipoIS+"|"+codPDA+"|"+editTextName.getText().toString().trim()+"|"+hostname();
+        //final String name = fechaActual()+"|"+idSucursal+"|"+placaBus+"|"+tipoIngreso+"|"+tipoIS+"|"+codPDA+"|"+editTextName.getText().toString().trim()+"|"+hostname();
+        final String name = editTextName.getText().toString().trim();
         final String dni = editTextName.getText().toString().trim();
         final String placa = placaBus;
+        final String idsucursal = idSucursal;
+        final String hostname = hostname();
+        final String fecharegistro = fechaActual();
+        final String pedateador = codPDA;
+        final String idtraslado = tipoIngreso;
+        final String idtipo = tipoIS;
         // final String name = tipoIngreso+"|"+fechaActual()+"|"+idSucursal+"|"+placaBus+"|"+editTextName.getText().toString().trim()+"|"+hostname();
 
 
@@ -251,11 +264,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             if (!obj.getBoolean("error")) {
                                 //if there is a success
                                 //storing the name to sqlite with status synced
-                                saveNameToLocalStorage(name, NAME_SYNCED_WITH_SERVER, dni, placa);
+                                saveNameToLocalStorage(name, NAME_SYNCED_WITH_SERVER, dni, placa, idsucursal, hostname, fecharegistro, pedateador, idtraslado, idtipo);
                             } else {
                                 //if there is some error
                                 //saving the name to sqlite with status unsynced
-                                saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER, dni, placa);
+                                saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER, dni, placa, idsucursal, hostname, fecharegistro, pedateador, idtraslado, idtipo);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -267,13 +280,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onErrorResponse(VolleyError error) {
                         progressDialog.dismiss();
                         //on error storing the name to sqlite with status unsynced
-                        saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER, dni, placa);
+                        saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER, dni, placa, idsucursal, hostname, fecharegistro, pedateador, idtraslado, idtipo);
                     }
                 }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("name", name);
+                params.put("dni", dni);
+                params.put("placa", placa);
+                params.put("idsucursal", idsucursal);
+                params.put("hostname", hostname);
+                params.put("fecharegistro", fecharegistro);
+                params.put("pedateador", pedateador);
+                params.put("idtraslado", idtraslado);
+                params.put("idtipo", idtipo);
                 return params;
             }
         };
@@ -282,11 +303,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     //saving the name to local storage
-    private void saveNameToLocalStorage(String name, int status, String dni, String placa) {
+    private void saveNameToLocalStorage(String name, int status, String dni, String placa, String idsucursal, String hostname, String fecharegistro, String pedateador, String idtraslado, String idtipo) {
         editTextName.setText("");
 
-        db.addName(name, status, dni, placa);
-        Name n = new Name(name, status, dni, placa);
+        db.addName(name, status, dni, placa, idsucursal, hostname, fecharegistro, pedateador, idtraslado, idtipo);
+        Name n = new Name(name, status, dni, placa, idsucursal, hostname, fecharegistro, pedateador, idtraslado, idtipo);
         names.add(n);
         refreshList();
         // Contador

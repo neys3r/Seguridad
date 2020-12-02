@@ -17,6 +17,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_STATUS = "status";
     public static final String COLUMN_DNI = "dni";
     public static final String COLUMN_PLACA = "placa";
+    public static final String COLUMN_IDSUCURSAL = "idsucursal";
+    public static final String COLUMN_HOSTNAME = "hostname";
+    public static final String COLUMN_PEDATEADOR = "pedateador";
+    public static final String COLUMN_FECHAREGISTRO = "fecharegistro";
+    public static final String COLUMN_IDTRASLADO = "idtraslado";
+    public static final String COLUMN_IDTIPO = "idtipo";
 
     //database version
     private static final int DB_VERSION = 1;
@@ -35,7 +41,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 " VARCHAR, " + COLUMN_STATUS +
                 " VARCHAR, " + COLUMN_DNI +
                 " VARCHAR, " + COLUMN_PLACA +
-                " TINYINT);";
+                " VARCHAR, " + COLUMN_IDSUCURSAL +
+                " VARCHAR, " + COLUMN_HOSTNAME +
+                " VARCHAR, " + COLUMN_FECHAREGISTRO +
+                " VARCHAR, " + COLUMN_PEDATEADOR +
+                " VARCHAR, " + COLUMN_IDTRASLADO +
+                " VARCHAR, " + COLUMN_IDTIPO +
+                " VARCHAR);";
         db.execSQL(sql);
     }
 
@@ -54,7 +66,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * 0 means the name is synced with the server
      * 1 means the name is not synced with the server
      * */
-    public boolean addName(String name, int status, String dni, String placa) {
+    public boolean addName(String name, int status, String dni, String placa, String idsucursal, String hostname, String fecharegistro, String pedateador, String idtraslado, String idtipo) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -62,7 +74,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_STATUS, status);
         contentValues.put(COLUMN_DNI, dni);
         contentValues.put(COLUMN_PLACA, placa);
-
+        contentValues.put(COLUMN_IDSUCURSAL, idsucursal);
+        contentValues.put(COLUMN_HOSTNAME, hostname);
+        contentValues.put(COLUMN_FECHAREGISTRO, fecharegistro);
+        contentValues.put(COLUMN_PEDATEADOR, pedateador);
+        contentValues.put(COLUMN_IDTRASLADO, idtraslado);
+        contentValues.put(COLUMN_IDTIPO, idtipo);
 
         db.insert(TABLE_NAME, null, contentValues);
         db.close();
@@ -90,7 +107,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getNames() {
         SQLiteDatabase db = this.getReadableDatabase();
         //String sql = "SELECT id, Substr(name,32,8) as name  FROM names WHERE LENGTH(NAME) = 39 order by id";
-        String sql = "SELECT id, Substr(name,45,8) as name, status, dni, placa FROM " + TABLE_NAME + " WHERE LENGTH(NAME) > 30 and substr( name, 1, 10 ) = strftime('%Y-%m-%d','now') order by id";
+        String sql = "SELECT id, name, status, dni, placa, idsucursal, hostname, fecharegistro, pedateador, idtraslado, idtipo FROM " + TABLE_NAME + " WHERE LENGTH(dni) = 8 and strftime('%Y-%m-%d',fecharegistro) = strftime('%Y-%m-%d','now') order by id";
         //String sql = "SELECT * FROM " + TABLE_NAME + " WHERE LENGTH(NAME) = 39 ORDER BY " + COLUMN_ID + " ASC;";
         Cursor c = db.rawQuery(sql, null);
         return c;
@@ -102,7 +119,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * */
     public Cursor getUnsyncedNames() {
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE LENGTH(NAME) > 30 and substr( name, 1, 10 ) = strftime('%Y-%m-%d','now') and  " + COLUMN_STATUS + " = 0 ;";
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE LENGTH(dni) = 8 and strftime('%Y-%m-%d',fecharegistro) = strftime('%Y-%m-%d','now') and  " + COLUMN_STATUS + " = 0 ;";
+        //String sql = "SELECT * FROM " + TABLE_NAME + " WHERE  " + COLUMN_STATUS + " = 0 ;";
         Cursor c = db.rawQuery(sql, null);
         return c;
     }
@@ -110,7 +128,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         public String totalRegistro(){
             String lsViaje="0";
-            String sql="select count(1) from names WHERE LENGTH(NAME) > 30 and substr( name, 1, 10 ) = strftime('%Y-%m-%d','now')";
+            String sql="select count(1) from names WHERE LENGTH(dni) = 8 and strftime('%Y-%m-%d',fecharegistro) = strftime('%Y-%m-%d','now')";
             SQLiteDatabase db= getReadableDatabase();
             Cursor cursor= db.rawQuery(sql, null);
             if(cursor.moveToFirst()){
@@ -123,7 +141,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public String totalNoSync(){
         String lsViaje="0";
-        String sql="select count(1) from names WHERE LENGTH(NAME) > 30 and status = 0 and substr( name, 1, 10 ) = strftime('%Y-%m-%d','now')";
+        String sql="select count(1) from names WHERE length(dni) = 8 and status = 0 and strftime('%Y-%m-%d',fecharegistro) = strftime('%Y-%m-%d','now')";
         SQLiteDatabase db= getReadableDatabase();
         Cursor cursor= db.rawQuery(sql, null);
         if(cursor.moveToFirst()){
@@ -136,7 +154,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public String totalSync(){
         String lsViaje="0";
-        String sql="select count(1) from names WHERE LENGTH(NAME) > 30 and status = 1 and substr( name, 1, 10 ) = strftime('%Y-%m-%d','now')";
+        String sql="select count(1) from names WHERE length(dni) = 8 and status = 1 and strftime('%Y-%m-%d',fecharegistro) = strftime('%Y-%m-%d','now')";
         SQLiteDatabase db= getReadableDatabase();
         Cursor cursor= db.rawQuery(sql, null);
         if(cursor.moveToFirst()){
