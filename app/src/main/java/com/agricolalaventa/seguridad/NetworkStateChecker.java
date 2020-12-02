@@ -70,7 +70,7 @@ public class NetworkStateChecker extends BroadcastReceiver {
      * if the name is successfully sent
      * we will update the status as synced in SQLite
      * */
-    private void saveName(final int id, final String name, final String dni, final String placa, final String idsucursal, final String fecharegistro, final String hostname, final String pedateador, final String idtraslado, final String idtipo ) {
+    private void saveName(final int id, final String name, final String dni, final String placa, final String idsucursal, final String hostname, final String fecharegistro, final String pedateador, final String idtraslado, final String idtipo ) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, MainActivity.URL_SAVE_NAME,
                 new Response.Listener<String>() {
                     @Override
