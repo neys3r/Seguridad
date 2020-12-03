@@ -91,6 +91,7 @@ public class Pedateador extends AppCompatActivity {
                 codPDA = edtVigilante.getText().toString();
                 longitud = edtVigilante.getText().toString().length();
 
+                // SharedPreferences
                 SharedPreferences preferencias = getSharedPreferences("datos", Context.MODE_PRIVATE);
                 SharedPreferences.Editor Obj_editor = preferencias.edit();
                 Obj_editor.putString("dni", edtVigilante.getText().toString());

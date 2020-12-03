@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -119,6 +120,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //adding click listener to button
         buttonSave.setOnClickListener(this);
+
+
 
 
         btnSync.setOnClickListener(new View.OnClickListener() {
@@ -411,6 +414,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onPause();
         finishAffinity();
     }
+
+    @Override
+    protected void onDestroy() {
+
+        // SharedPreferences
+        SharedPreferences preferencias = getSharedPreferences("datos", Context.MODE_PRIVATE);
+        SharedPreferences.Editor Obj_editor = preferencias.edit();
+        Obj_editor.putString("dni", "");
+        Obj_editor.commit();
+
+        super.onDestroy();
+        super.onPause();
+        finishAffinity();
+
+
+    }
+
+
+
+
+
+
+
+
 
     private void saveNameMA(final int id, final String name, final String dni, final String placa, final String idsucursal, final String hostname, final String fecharegistro, final String pedateador, final String idtraslado, final String idtipo ) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, MainActivity.URL_SAVE_NAME,
