@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.format.DateFormat;
 
+import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -32,8 +34,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final int DB_VERSION = 1;
 
     //Constructor
-    public DatabaseHelper(Context context) {
+   /* public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
+    }*/
+
+    public DatabaseHelper(Context context) {
+        super(context,DBContract.DATABASE_NAME, null, DB_VERSION);
     }
 
     //creating the database
@@ -56,8 +62,52 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String sql2 = "CREATE VIEW " + VIEW_REPO01 + " as SELECT placa, count(1) as cantidad FROM names group by placa ";
         db.execSQL(sql2);
 
-
+        createContactos(db);
+        createPdas(db);
+        createVigilantes(db);
     }
+
+
+    // Métodos SQLITE
+    public void createContactos(SQLiteDatabase db)
+    {
+        db.execSQL("CREATE TABLE "+DBContract.TABLE_CONTACTOS+"("+DBContract.Contactos.ID+" INTEGER PRIMARY KEY,"+DBContract.Contactos.NOMBRE+" TEXT," +
+                ""+DBContract.Contactos.APELLIDOS+" TEXT,"+DBContract.Contactos.TELEFONO+" TEXT);");
+    }
+
+    public void createPdas(SQLiteDatabase db)
+    {
+        db.execSQL("CREATE TABLE "+DBContract.TABLE_PDAS+"("+DBContract.Pdas.ID+" TEXT PRIMARY KEY,"+DBContract.Pdas.NOMBRE+" TEXT," +
+                ""+DBContract.Pdas.IDSUCURSAL+" TEXT);");
+    }
+
+    public void createVigilantes(SQLiteDatabase db)
+    {
+        db.execSQL("CREATE TABLE "+DBContract.TABLE_VIGILANTES+"("+DBContract.Vigilantes.IDVIGILANTE+" TEXT PRIMARY KEY,"+DBContract.Vigilantes.NOMBRES+" TEXT," +
+                ""+DBContract.Vigilantes.ESTADO+" TEXT);");
+    }
+
+    public void savePdas(String id,String nombre,String idsucursal, SQLiteDatabase db)
+    {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBContract.Pdas.ID,id);
+        contentValues.put(DBContract.Pdas.NOMBRE,nombre);
+        contentValues.put(DBContract.Pdas.IDSUCURSAL,idsucursal);
+
+        db.insert(DBContract.TABLE_PDAS,null, contentValues);
+    }
+
+    public void saveVigilantes(String idvigilante,String nombres,String estado, SQLiteDatabase db)
+    {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBContract.Vigilantes.IDVIGILANTE,idvigilante);
+        contentValues.put(DBContract.Vigilantes.NOMBRES,nombres);
+        contentValues.put(DBContract.Vigilantes.ESTADO,estado);
+
+        db.insert(DBContract.TABLE_VIGILANTES,null, contentValues);
+    }
+
+    // Fin Metodos SQLITE
 
     //upgrading the database
     @Override

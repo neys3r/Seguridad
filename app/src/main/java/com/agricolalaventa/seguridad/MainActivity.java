@@ -3,14 +3,17 @@ package com.agricolalaventa.seguridad;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -34,14 +37,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static android.graphics.Color.*;
 
@@ -116,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         tvFecha.setText(fechaLectura2);
         //tvHostname.setText(hostname()+ " | " +fechaActual());
-        tvHostname.setText(codPDA);
+        tvHostname.setText(macbluetooth());
 
         //adding click listener to button
         buttonSave.setOnClickListener(this);
@@ -157,31 +164,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(i);
             }
         });
-
-        // Prueba de Enter en PDA
-        /*
-        editTextName.setOnKeyListener(new View.OnKeyListener(){
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) && ( keyCode==KeyEvent.KEYCODE_ENTER))  {
-                    switch (keyCode) {
-                        case KeyEvent.KEYCODE_DPAD_CENTER:
-                        case KeyEvent.KEYCODE_ENTER:
-                            saveNameToServer();
-                            editTextName.forceLayout();
-                            editTextName.setText("");
-                            editTextName.forceLayout();
-                            Log.i("edtDNI", "enter pressed");
-                            return true;
-                        default:
-                            break;
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });
-
-*/
 
 
         // Recogemos placaBus y idSucursal de MainInicio
@@ -232,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvConteoSN.setText(db.totalSync());
         tvConteoNS.setText(db.totalNoSync());
         // tvHostname.setText(hostname()+ " | " +fechaActual());
-        tvHostname.setText(codPDA);
+        tvHostname.setText(macbluetooth());
 
         Cursor cursor = db.getNames();
         if (cursor.moveToFirst()) {
@@ -294,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvConteoSN.setText(db.totalSync());
         tvConteoNS.setText(db.totalNoSync());
         //tvHostname.setText(hostname()+ " | " +fechaActual());
-        tvHostname.setText(codPDA);
+        tvHostname.setText(macbluetooth());
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_SAVE_NAME,
                 new Response.Listener<String>() {
@@ -356,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvConteoSN.setText(db.totalSync());
         tvConteoNS.setText(db.totalNoSync());
         //tvHostname.setText(hostname()+ " | " +fechaActual());
-        tvHostname.setText(codPDA);
+        tvHostname.setText(macbluetooth());
     }
 
     // ATRIBUTOS DE DISPOSITIVO
@@ -370,6 +352,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String hostname(){
         return Settings.Secure.getString(getContentResolver(), "bluetooth_name");
     }
+
+    private String macbluetooth(){
+        return UUID.randomUUID().toString();
+
+    }
     // ---------------------------
 
     @Override
@@ -382,6 +369,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Toast.makeText(getApplicationContext(),"PResione",Toast.LENGTH_LONG).show();
         Intent i =new Intent(getApplicationContext(),MainInicio.class);
         startActivity(i);
+
     }
 
     private int mYear, mMonth, mDay, mHour, mMinute, mSec;
@@ -415,7 +403,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         finishAffinity();
     }
 
-    @Override
+   /* @Override
     protected void onDestroy() {
 
         // SharedPreferences
@@ -429,7 +417,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         finishAffinity();
 
 
-    }
+    }*/
 
 
 
@@ -482,5 +470,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
+
+
+    // Otros métodos
+
 
 }
