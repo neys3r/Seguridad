@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 import android.text.format.DateFormat;
 
 import androidx.annotation.Nullable;
@@ -78,7 +79,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void createPdas(SQLiteDatabase db)
     {
         db.execSQL("CREATE TABLE "+DBContract.TABLE_PDAS+"("+DBContract.Pdas.ID+" TEXT PRIMARY KEY,"+DBContract.Pdas.NOMBRE+" TEXT," +
-                ""+DBContract.Pdas.IDSUCURSAL+" TEXT);");
+                ""+DBContract.Pdas.IDSUCURSAL+" TEXT,"+DBContract.Pdas.DESCSUCURSAL+" TEXT);");
     }
 
     public void createVigilantes(SQLiteDatabase db)
@@ -87,12 +88,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 ""+DBContract.Vigilantes.ESTADO+" TEXT);");
     }
 
-    public void savePdas(String id,String nombre,String idsucursal, SQLiteDatabase db)
+    public void savePdas(String id,String nombre,String idsucursal,String descsucursal, SQLiteDatabase db)
     {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DBContract.Pdas.ID,id);
         contentValues.put(DBContract.Pdas.NOMBRE,nombre);
         contentValues.put(DBContract.Pdas.IDSUCURSAL,idsucursal);
+        contentValues.put(DBContract.Pdas.DESCSUCURSAL,descsucursal);
 
         db.insert(DBContract.TABLE_PDAS,null, contentValues);
     }
@@ -117,13 +119,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    /*
-     * This method is taking two arguments
-     * first one is the name that is to be saved
-     * second one is the status
-     * 0 means the name is synced with the server
-     * 1 means the name is not synced with the server
-     * */
+
     public boolean addName(String name, int status, String dni, String placa, String idsucursal, String hostname, String fecharegistro, String pedateador, String idtraslado, String idtipo) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -144,12 +140,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    /*
-     * This method taking two arguments
-     * first one is the id of the name for which
-     * we have to update the sync status
-     * and the second one is the status that will be changed
-     * */
+
     public boolean updateNameStatus(int id, int status) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -159,9 +150,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    /*
-     * this method will give us all the name stored in sqlite
-     * */
+
     public Cursor getNames() {
         SQLiteDatabase db = this.getReadableDatabase();
         //String sql = "SELECT id, Substr(name,32,8) as name  FROM names WHERE LENGTH(NAME) = 39 order by id";
@@ -171,10 +160,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    /*
-     * this method is for getting all the unsynced name
-     * so that we can sync it with database
-     * */
+
     public Cursor getUnsyncedNames() {
         SQLiteDatabase db = this.getReadableDatabase();
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE LENGTH(dni) = 8 and strftime('%Y-%m-%d',fecharegistro) = strftime('%Y-%m-%d','now') and  " + COLUMN_STATUS + " = 0 ;";
@@ -209,6 +195,55 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return lsViaje;
     }
+
+    public String miIdSucursal(){
+        String lsViaje="0";
+        String sql="SELECT idsucursal FROM pdas where id = '"+ seriePda() +"';";
+        SQLiteDatabase db= getReadableDatabase();
+        Cursor cursor= db.rawQuery(sql, null);
+        if(cursor.moveToFirst()){
+            do {
+                lsViaje = cursor.getString(0);
+            }while (cursor.moveToNext());
+        }
+        return lsViaje;
+    }
+
+    private String seriePda(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return Build.getSerial();
+        }else{
+            return Build.SERIAL;
+        }
+    }
+
+    public String miDescSucursal(){
+        String lsViaje="0";
+        String sql="SELECT descsucursal FROM pdas where id = '"+ Build.SERIAL +"';";
+        SQLiteDatabase db= getReadableDatabase();
+        Cursor cursor= db.rawQuery(sql, null);
+        if(cursor.moveToFirst()){
+            do {
+                lsViaje = cursor.getString(0);
+            }while (cursor.moveToNext());
+        }
+        return lsViaje;
+    }
+
+    public String existeVigilante(String dni){
+        String lsViaje="0";
+        String sql="SELECT idvigilante from vigilantes where idvigilante = '"+dni+"'";
+        SQLiteDatabase db= getReadableDatabase();
+        Cursor cursor= db.rawQuery(sql, null);
+        if(cursor.moveToFirst()){
+            do {
+                lsViaje = cursor.getString(0);
+            }while (cursor.moveToNext());
+        }
+        return lsViaje;
+    }
+
+
 
     public String qrepo01(){
         String lsViaje="0";

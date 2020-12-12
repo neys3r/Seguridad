@@ -22,7 +22,7 @@ public class MainInicio extends AppCompatActivity {
     private Button btnInicio;
     private String placaBus, dscSucursal, idSucursal, tipoIngreso, mensaje;
     private int longitud;
-    private Spinner spinner;
+    //private Spinner spinner;
     private RadioButton  radio_bus, radio_moto, radio_vehiculo, radio_peatonal;
     private RadioGroup radio_opciones;
     private TextView codPdaAcceso;
@@ -39,7 +39,7 @@ public class MainInicio extends AppCompatActivity {
         //edtSucursal = (EditText) findViewById(R.id.edtSucursal);
         edtPlaca = (EditText)findViewById(R.id.edtPlaca);
         btnInicio = (Button)findViewById(R.id.btnInicio);
-        spinner = (Spinner)findViewById(R.id.spinner);
+        //spinner = (Spinner)findViewById(R.id.spinner);
 
         radio_opciones = (RadioGroup) findViewById(R.id.radio_opciones);
         radio_bus = (RadioButton)findViewById(R.id.radio_bus);
@@ -58,7 +58,7 @@ public class MainInicio extends AppCompatActivity {
 
         String [] opciones = {"Seleccionar Sucursal", "Pinilla", "Mayorazgo", "Don Jorge", "San Judas"};
         ArrayAdapter <String> adapterS = new ArrayAdapter<String>(this,R.layout.spinner_item_sucursal, opciones);
-        spinner.setAdapter(adapterS);
+        //spinner.setAdapter(adapterS);
 
         tvTitInicio.setText("Registro de "+descIS);
 
@@ -100,8 +100,8 @@ public class MainInicio extends AppCompatActivity {
                 //idSucursal = edtSucursal.getText().toString();
                 longitud = edtPlaca.getText().toString().length();
 
-                String seleccion = spinner.getSelectedItem().toString();
-
+                //String seleccion = spinner.getSelectedItem().toString();
+/*
                 if (seleccion.equals("Pinilla")){
                     idSucursal = "006";
                     dscSucursal = "Pinilla";
@@ -117,7 +117,8 @@ public class MainInicio extends AppCompatActivity {
                 }else{
                     idSucursal = "999";
                     dscSucursal = "Sin Sucursal";
-                }
+                }*/
+
 
                 // Seleccionar tipo de ingreso
 
@@ -133,11 +134,6 @@ public class MainInicio extends AppCompatActivity {
                     tipoIngreso = "9";
                 }
 
-
-
-                if (spinner.getSelectedItem().toString().equals("Seleccionar Sucursal")){
-                    Toast.makeText(getApplicationContext(),"Seleccionar seleccionar una Sucursal",Toast.LENGTH_LONG).show();
-                } else{
                     //Toast.makeText(getApplicationContext(),"Seleccionar válida:T-"+tipoIngreso,Toast.LENGTH_LONG).show();
                     switch (tipoIngreso){
                         case  "1":
@@ -151,8 +147,8 @@ public class MainInicio extends AppCompatActivity {
 
                                 Intent a1 =new Intent(getApplicationContext(),MainActivity.class);
                                 a1.putExtra("placaBus", placaBus);
-                                a1.putExtra("idSucursal", idSucursal);
-                                a1.putExtra("dscSucursal", dscSucursal);
+                                //a1.putExtra("idSucursal", idSucursal);
+                                //a1.putExtra("dscSucursal", dscSucursal);
                                 a1.putExtra("tipoIngreso", tipoIngreso);
                                 a1.putExtra("codPDA", codPDA);
                                 a1.putExtra("tipoIS", tipoIS);
@@ -170,8 +166,8 @@ public class MainInicio extends AppCompatActivity {
 
                                 Intent a2 =new Intent(getApplicationContext(),MainActivity.class);
                                 a2.putExtra("placaBus", "MMMMMM");
-                                a2.putExtra("idSucursal", idSucursal);
-                                a2.putExtra("dscSucursal", dscSucursal);
+                                //a2.putExtra("idSucursal", idSucursal);
+                                //a2.putExtra("dscSucursal", dscSucursal);
                                 a2.putExtra("tipoIngreso", tipoIngreso);
                                 a2.putExtra("codPDA", codPDA);
                                 a2.putExtra("tipoIS", tipoIS);
@@ -192,8 +188,8 @@ public class MainInicio extends AppCompatActivity {
 
                                 Intent a3 =new Intent(getApplicationContext(),MainActivity.class);
                                 a3.putExtra("placaBus", placaBus);
-                                a3.putExtra("idSucursal", idSucursal);
-                                a3.putExtra("dscSucursal", dscSucursal);
+                                //a3.putExtra("idSucursal", idSucursal);
+                                //a3.putExtra("dscSucursal", dscSucursal);
                                 a3.putExtra("tipoIngreso", tipoIngreso);
                                 a3.putExtra("codPDA", codPDA);
                                 a3.putExtra("tipoIS", tipoIS);
@@ -209,8 +205,8 @@ public class MainInicio extends AppCompatActivity {
 
                             Intent a4 =new Intent(getApplicationContext(),MainActivity.class);
                             a4.putExtra("placaBus", "PPPPPP");
-                            a4.putExtra("idSucursal", idSucursal);
-                            a4.putExtra("dscSucursal", dscSucursal);
+                            //a4.putExtra("idSucursal", idSucursal);
+                            //a4.putExtra("dscSucursal", dscSucursal);
                             a4.putExtra("tipoIngreso", tipoIngreso);
                             a4.putExtra("codPDA", codPDA);
                             a4.putExtra("tipoIS", tipoIS);
@@ -223,7 +219,7 @@ public class MainInicio extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"Debes elegir un tipo de Ingreso válido",Toast.LENGTH_LONG).show();
                             break;
                     }
-                }
+                //} -- eliminar
 
             }
         });

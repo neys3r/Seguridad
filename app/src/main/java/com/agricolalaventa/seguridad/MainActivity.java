@@ -121,6 +121,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvHostname = (TextView) findViewById(R.id.tvHostname);
         linearRegistro = (LinearLayout)findViewById(R.id.activity_main);
 
+        //Toast.makeText(this, db.miSucursal(), Toast.LENGTH_LONG).show();
+
         tvFecha.setText(fechaLectura2);
         //tvHostname.setText(hostname()+ " | " +fechaActual());
         tvHostname.setText(macbluetooth());
@@ -165,12 +167,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        idSucursal = db.miIdSucursal();
+        dscSucursal = db.miDescSucursal();
 
         // Recogemos placaBus y idSucursal de MainInicio
         Bundle bundle = getIntent().getExtras();
         placaBus = bundle.getString("placaBus");
-        idSucursal = bundle.getString("idSucursal");
-        dscSucursal = bundle.getString("dscSucursal");
+        //idSucursal = bundle.getString("idSucursal");
+        //dscSucursal = bundle.getString("dscSucursal");
         tipoIngreso = bundle.getString("tipoIngreso");
         codPDA = bundle.getString("codPDA");
         tipoIS = bundle.getString("tipoIS");
@@ -354,8 +358,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private String macbluetooth(){
-        return UUID.randomUUID().toString();
+        //return UUID.randomUUID().toString();
+        return Build.SERIAL+"|"+db.miIdSucursal()+"|"+db.miDescSucursal()+"|"+db.existeVigilante(codPDA);
+    }
 
+    private String seriePda(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return Build.getSerial();
+        }else{
+            return Build.SERIAL;
+        }
     }
     // ---------------------------
 

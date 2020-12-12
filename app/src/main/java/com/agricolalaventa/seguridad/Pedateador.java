@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -39,8 +40,9 @@ public class Pedateador extends AppCompatActivity {
     private RadioButton radio_ingreso, radio_salida;
     private RadioGroup radio_tipo;
     private EditText edtVigilante;
-    private Button btnGuardarVigilante;
-    public String codPDA, mensaje, tipoIS, descIS;
+    private Button btnGuardarVigilante, btnVerificarVigilante;
+    private String codPDA, mensaje, tipoIS, descIS, idvigilante;
+    private DatabaseHelper db;
     int longitud;
 
     @Override
@@ -54,6 +56,7 @@ public class Pedateador extends AppCompatActivity {
         tvCodVigilante = (TextView)findViewById(R.id.tvCodVigilante);
         edtVigilante = (EditText)findViewById(R.id.edtVigilante);
         btnGuardarVigilante = (Button)findViewById(R.id.btnGuardarVigilante);
+        btnVerificarVigilante = (Button)findViewById(R.id.btnVerificarVigilante);
 
         //Radio Button
         radio_tipo = (RadioGroup) findViewById(R.id.radio_tipo);
@@ -62,19 +65,36 @@ public class Pedateador extends AppCompatActivity {
 
 
         // Sharepreference
-        SharedPreferences preferences = getSharedPreferences("datos", Context.MODE_PRIVATE);
-        edtVigilante.setText(preferences.getString("dni", ""));
+        //SharedPreferences preferences = getSharedPreferences("datos", Context.MODE_PRIVATE);
+        //edtVigilante.setText(preferences.getString("dni", ""));
 
         // Impedir Ingreso manual de DNI
         edtVigilante.setInputType(InputType.TYPE_NULL);
 
         // Sincronización
 
-
+        //initializing views and objects
+        db = new DatabaseHelper(this);
 
 
         //Obtener información de RadioButton
 
+        //Acciones Boton Verificar
+        btnVerificarVigilante.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String valor01 = edtVigilante.getText().toString();
+                String valor02 = db.existeVigilante(valor01);
+
+                //Log.i("prueba","prueba1:|"+prueba3+"| prueba2:|"+prueba4+"|");
+
+                if (valor01.equalsIgnoreCase(valor02)){
+                    Toast.makeText(getApplicationContext(), "Verificado", Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getApplicationContext(),"No verificado|"+valor01+"|"+valor02,Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 
         // Acciones del Boton Guardar Vigilante
         btnGuardarVigilante.setOnClickListener(new View.OnClickListener() {
@@ -83,12 +103,13 @@ public class Pedateador extends AppCompatActivity {
 
                 codPDA = edtVigilante.getText().toString();
                 longitud = edtVigilante.getText().toString().length();
+                idvigilante = db.existeVigilante(codPDA);
 
                 // SharedPreferences
-                SharedPreferences preferencias = getSharedPreferences("datos", Context.MODE_PRIVATE);
+                /*SharedPreferences preferencias = getSharedPreferences("datos", Context.MODE_PRIVATE);
                 SharedPreferences.Editor Obj_editor = preferencias.edit();
                 Obj_editor.putString("dni", edtVigilante.getText().toString());
-                Obj_editor.commit();
+                Obj_editor.commit();*/
 
                 // Verificar check
 
@@ -103,27 +124,31 @@ public class Pedateador extends AppCompatActivity {
                     descIS = "Otros";
                 }
 
-                if(codPDA.isEmpty()){
-                    Toast.makeText(getApplicationContext(),descIS+tipoIS+"Ingrese un DNI",Toast.LENGTH_LONG).show();
 
-                }else {
+
+                if(codPDA.isEmpty()){
+                    Toast.makeText(getApplicationContext(),"Ingrese un DNI",Toast.LENGTH_LONG).show();
+
+                }
+                else {
                     if ( longitud != 8) {
                         Toast.makeText(getApplicationContext(),"El DNI debe tener 8 dígitos, ",Toast.LENGTH_LONG).show();
                     }else if(tipoIS == "9"){
                         Toast.makeText(getApplicationContext(),"Ingresar Ingreso / Salida, ",Toast.LENGTH_LONG).show();
-                    }
-                    else {
+                    }else if(codPDA.equalsIgnoreCase(idvigilante)){
 
-                        mensaje = "DNI " + codPDA + " grabado";
+                        mensaje = "DNI " + idvigilante + " grabado";
 
                         Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
-
-
                         Intent i =new Intent(getApplicationContext(),MainInicio.class);
                         i.putExtra("codPDA", codPDA);
                         i.putExtra("tipoIS", tipoIS);
                         i.putExtra("descIS", descIS);
                         startActivity(i);
+                    }
+                    else {
+
+                        Toast.makeText(getApplicationContext(),"Vigilante no reconicido",Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -137,8 +162,11 @@ public class Pedateador extends AppCompatActivity {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 if((keyEvent.getAction()==KeyEvent.ACTION_DOWN ) && (i==KeyEvent.KEYCODE_ENTER)  ){
+
                     codPDA = edtVigilante.getText().toString();
                     longitud = edtVigilante.getText().toString().length();
+                    idvigilante = db.existeVigilante(codPDA);
+
 
                     // Verificar check
 
@@ -156,23 +184,30 @@ public class Pedateador extends AppCompatActivity {
                     if(codPDA.isEmpty()){
                         Toast.makeText(getApplicationContext(),"Ingrese un DNI",Toast.LENGTH_LONG).show();
 
-                    }else {
+                    }
+                    else {
                         if ( longitud != 8) {
                             Toast.makeText(getApplicationContext(),"El DNI debe tener 8 dígitos, ",Toast.LENGTH_LONG).show();
                         }else if(tipoIS == "9"){
                             Toast.makeText(getApplicationContext(),"Ingresar Ingreso / Salida, ",Toast.LENGTH_LONG).show();
-                        }
-                        else {
+                        }else if(db.miIdSucursal().length()!=3){
 
-                            mensaje = "DNI " + codPDA + " grabado";
+                            Toast.makeText(getApplicationContext(),"PDA no Activo"+"|"+db.miIdSucursal(),Toast.LENGTH_LONG).show();
+
+                        }else if(codPDA.equalsIgnoreCase(idvigilante)){
+
+                            mensaje = "DNI " + idvigilante + " grabado";
 
                             Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
-
                             Intent ii =new Intent(getApplicationContext(),MainInicio.class);
                             ii.putExtra("codPDA", codPDA);
                             ii.putExtra("tipoIS", tipoIS);
                             ii.putExtra("descIS", descIS);
                             startActivity(ii);
+                        }
+                        else {
+
+                            Toast.makeText(getApplicationContext(),"Vigilante no reconicido"+"|"+db.miIdSucursal(),Toast.LENGTH_LONG).show();
                         }
                     }
                     return true;
@@ -189,7 +224,7 @@ public class Pedateador extends AppCompatActivity {
 
     public static boolean checkNetworkConnection(Context context)
     {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return (networkInfo!=null && networkInfo.isConnected());
     }
@@ -239,7 +274,39 @@ public class Pedateador extends AppCompatActivity {
                         for(int i = 0; i<array.length(); i++)
                         {
                             JSONObject object = array.getJSONObject(i);
-                            database.savePdas(object.getString("id"),object.getString("nombre"),object.getString("idsucursal"),db);
+                            database.savePdas(object.getString("id"),object.getString("nombre"),object.getString("idsucursal"),object.getString("descsucursal"),db);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("error",""+error);
+                }
+            });
+            MySingleton.getInstance(context).addToRequestQue(stringRequest);
+        }
+    }
+
+    public static void sincronizarPdasPost(Context context)
+    {
+        if(checkNetworkConnection(context))
+        {
+            final DatabaseHelper database = new DatabaseHelper(context);
+            final SQLiteDatabase db = database.getWritableDatabase();
+            String urlApiLogin = "http://wslaventa.agricolalaventa.com/asistencia/pda.php";
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, urlApiLogin, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    try {
+                        JSONArray array = new JSONArray(response);
+                        for(int i = 0; i<array.length(); i++)
+                        {
+                            JSONObject object = array.getJSONObject(i);
+                            database.savePdas(object.getString("id"),object.getString("nombre"),object.getString("idsucursal"),object.getString("descsucursal"),db);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -324,5 +391,13 @@ public class Pedateador extends AppCompatActivity {
         }
     }
 
+    // Obtener N° Serie PDA
+    private String seriePda(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return Build.getSerial();
+        }else{
+            return Build.SERIAL;
+        }
+    }
 
 }

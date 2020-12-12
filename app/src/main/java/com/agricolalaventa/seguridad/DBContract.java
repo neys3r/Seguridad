@@ -20,6 +20,8 @@ public class DBContract {
         public static String ID = "id";
         public static String NOMBRE = "nombre";
         public static String IDSUCURSAL = "idsucursal";
+        public static String DESCSUCURSAL = "descsucursal";
+
     }
 
     public static class Vigilantes implements BaseColumns{
