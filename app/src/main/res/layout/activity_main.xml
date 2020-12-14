@@ -30,12 +30,6 @@
             android:layout_weight="7"
             android:gravity="center_horizontal" />
 
-        <Switch
-            android:id="@+id/swTipoRegistro"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Tipo" />
 
         <ImageView
             android:background="@drawable/stopwatch"
@@ -160,14 +154,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="SYNC" />
+            android:text="SYNC"
+            android:visibility="gone" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/tvHostname"

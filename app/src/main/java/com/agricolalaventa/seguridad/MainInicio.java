@@ -2,7 +2,9 @@ package com.agricolalaventa.seguridad;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.View;
@@ -11,7 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,8 +27,9 @@ public class MainInicio extends AppCompatActivity {
     //private Spinner spinner;
     private RadioButton  radio_bus, radio_moto, radio_vehiculo, radio_peatonal;
     private RadioGroup radio_opciones;
-    private TextView codPdaAcceso;
-    private String codPDA;
+    private TextView tvTipoIS, codPdaAcceso;
+    private Switch swOpcionTipoRegistro;
+    //private String codPDA;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +37,7 @@ public class MainInicio extends AppCompatActivity {
         setContentView(R.layout.activity_inicio);
 
         tvTitInicio = (TextView)findViewById(R.id.tvTitInicio);
-        tvFechaInicio = (TextView)findViewById(R.id.tvFechaInicio);
+        //tvFechaInicio = (TextView)findViewById(R.id.tvFechaInicio);
 
         //edtSucursal = (EditText) findViewById(R.id.edtSucursal);
         edtPlaca = (EditText)findViewById(R.id.edtPlaca);
@@ -46,10 +49,12 @@ public class MainInicio extends AppCompatActivity {
         radio_moto = (RadioButton)findViewById(R.id.radio_moto);
         radio_vehiculo = (RadioButton)findViewById(R.id.radio_vehiculo);
         radio_peatonal = (RadioButton)findViewById(R.id.radio_peatonal);
+        swOpcionTipoRegistro = (Switch)findViewById(R.id.swOpcionTipoRegistro);
+        tvTipoIS = (TextView) findViewById(R.id.tvTipoIS);
 
         // Recogemos codPDA del activity Pedateador
-        Bundle bundle = getIntent().getExtras();
-        codPDA = bundle.getString("codPDA");
+        //Bundle bundle = getIntent().getExtras();
+        //codPDA = bundle.getString("codPDA");
         //codPdaAcceso.setText(codPDA);
 
         boolean estado = radio_moto.isChecked();
@@ -59,6 +64,40 @@ public class MainInicio extends AppCompatActivity {
         //spinner.setAdapter(adapterS);
 
         //tvTitInicio.setText("Registro de "+descIS);
+
+        // Cambiar Información TipoIngreso/Salida
+         infoSwithc();
+
+        /*if (swOpcionTipoRegistro.isChecked()){
+            //Toast.makeText(getApplicationContext(),"Prueba 0", Toast.LENGTH_LONG).show();
+
+            SharedPreferences preferencias = getSharedPreferences
+                    ("datosTipoIS", Context.MODE_PRIVATE);
+            String idTipoIS = "0";
+            String descTipoIS = "Salida";
+            tvTipoIS.setText(descTipoIS);
+            tvTipoIS.setBackgroundColor(Integer.parseInt("#FF0000"));
+
+            SharedPreferences.Editor editor = preferencias.edit();
+            editor.putString("idTipoIS", idTipoIS);
+            editor.putString("descTipoIS", descTipoIS);
+            editor.commit();
+
+        }else{
+            SharedPreferences preferencias = getSharedPreferences
+                    ("datosTipoIS", Context.MODE_PRIVATE);
+            String idTipoIS = "0";
+            String descTipoIS = "Ingreso";
+            tvTipoIS.setText(descTipoIS);
+
+            SharedPreferences.Editor editor = preferencias.edit();
+            editor.putString("idTipoIS", idTipoIS);
+            editor.putString("descTipoIS", descTipoIS);
+            editor.commit();
+        }*/
+
+        // FIN
+
 
         edtPlaca.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
 
@@ -148,7 +187,7 @@ public class MainInicio extends AppCompatActivity {
                                 //a1.putExtra("idSucursal", idSucursal);
                                 //a1.putExtra("dscSucursal", dscSucursal);
                                 a1.putExtra("tipoIngreso", tipoIngreso);
-                                a1.putExtra("codPDA", codPDA);
+                                //a1.putExtra("codPDA", codPDA);
                                 startActivity(a1);
                             }
 
@@ -165,7 +204,7 @@ public class MainInicio extends AppCompatActivity {
                                 //a2.putExtra("idSucursal", idSucursal);
                                 //a2.putExtra("dscSucursal", dscSucursal);
                                 a2.putExtra("tipoIngreso", tipoIngreso);
-                                a2.putExtra("codPDA", codPDA);
+                                //a2.putExtra("codPDA", codPDA);
                                 startActivity(a2);
                                 //finish();
 
@@ -185,7 +224,7 @@ public class MainInicio extends AppCompatActivity {
                                 //a3.putExtra("idSucursal", idSucursal);
                                 //a3.putExtra("dscSucursal", dscSucursal);
                                 a3.putExtra("tipoIngreso", tipoIngreso);
-                                a3.putExtra("codPDA", codPDA);
+                                //a3.putExtra("codPDA", codPDA);
                                 startActivity(a3);
                             }
                             break;
@@ -200,7 +239,7 @@ public class MainInicio extends AppCompatActivity {
                             //a4.putExtra("idSucursal", idSucursal);
                             //a4.putExtra("dscSucursal", dscSucursal);
                             a4.putExtra("tipoIngreso", tipoIngreso);
-                            a4.putExtra("codPDA", codPDA);
+                            //a4.putExtra("codPDA", codPDA);
                             startActivity(a4);
 
                             break;
@@ -218,6 +257,73 @@ public class MainInicio extends AppCompatActivity {
 
 
     }
+
+    public void onClick(View view){
+        if (view.getId()==R.id.swOpcionTipoRegistro){
+            infoSwithc();
+        // Cambiar Información TipoIngreso/Salida
+            /*if (swOpcionTipoRegistro.isChecked()){
+                Toast.makeText(getApplicationContext(),"Switch Salida", Toast.LENGTH_LONG).show();
+
+                SharedPreferences preferencias = getSharedPreferences
+                        ("datosTipoIS", Context.MODE_PRIVATE);
+                String idTipoIS = "1";
+                String descTipoIS = "Salida";
+                tvTipoIS.setText(descTipoIS);
+
+                SharedPreferences.Editor editor = preferencias.edit();
+                editor.putString("idTipoIS", idTipoIS);
+                editor.putString("descTipoIS", descTipoIS);
+                editor.commit();
+
+            }else{
+                Toast.makeText(getApplicationContext(),"Switch Ingreso", Toast.LENGTH_LONG).show();
+                SharedPreferences preferencias = getSharedPreferences
+                        ("datosTipoIS", Context.MODE_PRIVATE);
+                String idTipoIS = "0";
+                String descTipoIS = "Ingreso";
+                tvTipoIS.setText(descTipoIS);
+
+                SharedPreferences.Editor editor = preferencias.edit();
+                editor.putString("idTipoIS", idTipoIS);
+                editor.putString("descTipoIS", descTipoIS);
+                editor.commit();
+            }*/
+        }
+
+    }
+
+    public void infoSwithc(){
+        if (swOpcionTipoRegistro.isChecked()){
+            Toast.makeText(getApplicationContext(),"Switch Salida", Toast.LENGTH_LONG).show();
+
+            SharedPreferences preferencias = getSharedPreferences
+                    ("datosTipoIS", Context.MODE_PRIVATE);
+            String idTipoIS = "1";
+            String descTipoIS = "Salida";
+            tvTipoIS.setText(descTipoIS);
+
+            SharedPreferences.Editor editor = preferencias.edit();
+            editor.putString("idTipoIS", idTipoIS);
+            editor.putString("descTipoIS", descTipoIS);
+            editor.commit();
+
+        }else{
+            Toast.makeText(getApplicationContext(),"Switch Ingreso", Toast.LENGTH_LONG).show();
+            SharedPreferences preferencias = getSharedPreferences
+                    ("datosTipoIS", Context.MODE_PRIVATE);
+            String idTipoIS = "0";
+            String descTipoIS = "Ingreso";
+            tvTipoIS.setText(descTipoIS);
+
+            SharedPreferences.Editor editor = preferencias.edit();
+            editor.putString("idTipoIS", idTipoIS);
+            editor.putString("descTipoIS", descTipoIS);
+            editor.commit();
+        }
+    }
+
+
 
 
 

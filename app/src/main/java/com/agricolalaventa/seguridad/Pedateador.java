@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -12,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -35,7 +37,7 @@ import org.json.JSONObject;
 
 public class Pedateador extends AppCompatActivity {
 
-    private TextView tvTitPedateador, tvCodVigilante;
+    private TextView tvSincronizacion, tvTitPedateador, tvCodVigilante;
     private RadioButton radio_ingreso, radio_salida;
     private RadioGroup radio_tipo;
     private EditText edtVigilante;
@@ -56,24 +58,36 @@ public class Pedateador extends AppCompatActivity {
         edtVigilante = (EditText)findViewById(R.id.edtVigilante);
         btnGuardarVigilante = (Button)findViewById(R.id.btnGuardarVigilante);
         btnVerificarVigilante = (Button)findViewById(R.id.btnVerificarVigilante);
+        tvSincronizacion = (TextView)findViewById(R.id.tvSincronizacion);
 
         //Radio Button
-        radio_tipo = (RadioGroup) findViewById(R.id.radio_tipo);
-        radio_ingreso = (RadioButton)findViewById(R.id.radio_ingreso);
-        radio_salida = (RadioButton)findViewById(R.id.radio_salida);
+        //radio_tipo = (RadioGroup) findViewById(R.id.radio_tipo);
+       // radio_ingreso = (RadioButton)findViewById(R.id.radio_ingreso);
+       // radio_salida = (RadioButton)findViewById(R.id.radio_salida);
 
+/*
+        // Jalar Info Sharedpreference
+        /*SharedPreferences preferences = getSharedPreferences("datosPedateador", Context.MODE_PRIVATE);
+        edtVigilante.setText(preferences.getString("dniPedateador", ""));
 
-        // Sharepreference
-        //SharedPreferences preferences = getSharedPreferences("datos", Context.MODE_PRIVATE);
-        //edtVigilante.setText(preferences.getString("dni", ""));
+        // Declarar Info Sharedpreference
+        SharedPreferences preferencias = getSharedPreferences("datosPedateador", Context.MODE_PRIVATE);
+        SharedPreferences.Editor Obj_editor = preferencias.edit();
+        Obj_editor.putString("dniPedateador", edtVigilante.getText().toString());
+        Obj_editor.commit();
 
+*/
         // Impedir Ingreso manual de DNI
         edtVigilante.setInputType(InputType.TYPE_NULL);
+        cargarPreferenciasSync();
 
         // Sincronización
 
         //initializing views and objects
         db = new DatabaseHelper(this);
+
+        // Ejecutar SharedPreferences
+
 
 
         //Obtener información de RadioButton
@@ -136,7 +150,7 @@ public class Pedateador extends AppCompatActivity {
 
                         mensaje = "DNI " + idvigilante + " grabado";
 
-                        Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
                         Intent i =new Intent(getApplicationContext(),MainInicio.class);
                         i.putExtra("codPDA", codPDA);
                         startActivity(i);
@@ -162,7 +176,7 @@ public class Pedateador extends AppCompatActivity {
                     longitud = edtVigilante.getText().toString().length();
                     idvigilante = db.existeVigilante(codPDA);
 
-
+                    guardarPreferencias();
                     // Verificar check
 /*
                     if (radio_ingreso.isChecked() == true){
@@ -191,7 +205,7 @@ public class Pedateador extends AppCompatActivity {
 
                             mensaje = "DNI " + idvigilante + " grabado";
 
-                            Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
                             Intent ii =new Intent(getApplicationContext(),MainInicio.class);
                             ii.putExtra("codPDA", codPDA);
                             startActivity(ii);
@@ -244,7 +258,7 @@ public class Pedateador extends AppCompatActivity {
             progressDialog.setMessage("Sincronizando");
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             new Sincronizar(this,progressDialog).execute();
-
+            guardarPreferenciaSincronizacion();
         }
 
         return super.onOptionsItemSelected(item);
@@ -378,17 +392,55 @@ public class Pedateador extends AppCompatActivity {
             super.onPostExecute(aVoid);
             progressDialog.hide();
             Toast.makeText(context, "Sincronizado Correctamente", Toast.LENGTH_LONG).show();
+
             //readContactos(context);
         }
     }
 
     // Obtener N° Serie PDA
-    private String seriePda(){
+    /*private String seriePda(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             return Build.getSerial();
         }else{
             return Build.SERIAL;
         }
+    }*/
+
+    private void guardarPreferencias(){
+        SharedPreferences preferencias = getSharedPreferences
+                ("datosPedateador", Context.MODE_PRIVATE);
+        String idPedateador = edtVigilante.getText().toString();
+        String idPDA = db.seriePda();
+
+        SharedPreferences.Editor editor = preferencias.edit();
+        editor.putString("idpetateador", idPedateador);
+        editor.putString("idpda", idPDA);
+        editor.commit();
     }
+
+    private void cargarPreferenciasSync(){
+        SharedPreferences preferencias = getSharedPreferences
+                ("datosSincronizacion", Context.MODE_PRIVATE);
+        String fechasync = preferencias.getString("fechasync", "PDA no Sincronizado !!!");
+        tvSincronizacion.setText(fechasync);
+    }
+
+
+    public void guardarPreferenciaSincronizacion(){
+        SharedPreferences preferencias = getSharedPreferences
+                ("datosSincronizacion", Context.MODE_PRIVATE);
+        String fechasync = fechaASync();
+        SharedPreferences.Editor editor = preferencias.edit();
+        editor.putString("fechasync", fechasync);
+        tvSincronizacion.setText(fechasync);
+        editor.commit();
+    }
+
+    private String fechaASync(){
+        String fecha = "";
+        fecha = "Última Sincronización: "+(DateFormat.format("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis()).toString());
+        return fecha;
+    }
+
 
 }

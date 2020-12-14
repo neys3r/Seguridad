@@ -209,7 +209,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return lsViaje;
     }
 
-    private String seriePda(){
+    public String seriePda(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             return Build.getSerial();
         }else{

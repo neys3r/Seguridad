@@ -74,10 +74,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText editTextName;
     private ListView listViewNames;
     private TextView tvFecha, tvBus, tvSucursal, tvConteoSN, tvConteoNS, tvHostname, tvTitulo;
-    private String codPDA, tipoIS, descIS;
+    private String codPDA, tipoIS, descIS, idVigilante;
     private LinearLayout linearRegistro;
     private ImageView ivLogoTipo;
-    private Switch swTipoRegistro;
+
 
 
     private String fechaLectura = (DateFormat.format("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis()).toString());
@@ -123,9 +123,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvConteoNS = (TextView) findViewById(R.id.tvConteoNS);
         tvHostname = (TextView) findViewById(R.id.tvHostname);
         linearRegistro = (LinearLayout)findViewById(R.id.activity_main);
-        swTipoRegistro = (Switch)findViewById(R.id.swTipoRegistro);
+
 
         //Toast.makeText(this, db.miSucursal(), Toast.LENGTH_LONG).show();
+
+        cargarTipoIS();
 
         tvFecha.setText(fechaLectura2);
         //tvHostname.setText(hostname()+ " | " +fechaActual());
@@ -133,6 +135,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //adding click listener to button
         buttonSave.setOnClickListener(this);
+
+
 
         btnSync.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,16 +163,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        // Verificación de Switch Ingreso / Salida
 
-        if (swTipoRegistro.isChecked()){
-            tipoIS = "0";
-            descIS = "Ingreso";
-        }else{
-            tipoIS = "1";
-            descIS = "Salida";
-        }
 
+        //idVigilante = db.existeVigilante(codPDA);
+
+        //Cargar las Preferencias
+        cargarPreferencias();
 
         btnRepo01.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,12 +187,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //idSucursal = bundle.getString("idSucursal");
         //dscSucursal = bundle.getString("dscSucursal");
         tipoIngreso = bundle.getString("tipoIngreso");
-        codPDA = bundle.getString("codPDA");
+        //codPDA = bundle.getString("codPDA");
 
 
         tvBus.setText(placaBus);
         tvSucursal.setText(dscSucursal);
-        tvTitulo.setText("Registro de "+descIS);
+
        // tvConteo.setText(conteo);
 
         tvConteoSN.setText(db.totalSync());
@@ -320,6 +320,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //String fechaLectura = (DateFormat.format("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis()).toString());
 
         //tvFecha.setText(fechaLectura);
+        cargarTipoIS();
 
         //final String name = fechaActual()+"|"+idSucursal+"|"+placaBus+"|"+tipoIngreso+"|"+tipoIS+"|"+codPDA+"|"+editTextName.getText().toString().trim()+"|"+hostname();
         final String name = editTextName.getText().toString().trim();
@@ -541,8 +542,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
 
-
     // Otros métodos
+
+    private void cargarPreferencias(){
+        SharedPreferences preferencias = getSharedPreferences
+                ("datosPedateador", Context.MODE_PRIVATE);
+        codPDA = preferencias.getString("idpetateador", "No existe Info");
+        idVigilante = preferencias.getString("idpda", "No existe Info");
+    }
+
+    private void cargarTipoIS(){
+        SharedPreferences preferencias = getSharedPreferences
+                ("datosTipoIS", Context.MODE_PRIVATE);
+        tipoIS = preferencias.getString("idTipoIS", "No existe Info");
+        descIS = preferencias.getString("descTipoIS", "No existe Info");
+        tvTitulo.setText("Registro de"+descIS);
+    }
+
+
+
 
 
 }
