@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -112,7 +111,7 @@ public class Pedateador extends AppCompatActivity {
                 Obj_editor.commit();*/
 
                 // Verificar check
-
+/*
                 if (radio_ingreso.isChecked() == true){
                     tipoIS = "0";
                     descIS = "Ingreso";
@@ -123,7 +122,7 @@ public class Pedateador extends AppCompatActivity {
                     tipoIS = "9";
                     descIS = "Otros";
                 }
-
+*/
 
 
                 if(codPDA.isEmpty()){
@@ -133,8 +132,6 @@ public class Pedateador extends AppCompatActivity {
                 else {
                     if ( longitud != 8) {
                         Toast.makeText(getApplicationContext(),"El DNI debe tener 8 dígitos, ",Toast.LENGTH_LONG).show();
-                    }else if(tipoIS == "9"){
-                        Toast.makeText(getApplicationContext(),"Ingresar Ingreso / Salida, ",Toast.LENGTH_LONG).show();
                     }else if(codPDA.equalsIgnoreCase(idvigilante)){
 
                         mensaje = "DNI " + idvigilante + " grabado";
@@ -142,8 +139,6 @@ public class Pedateador extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
                         Intent i =new Intent(getApplicationContext(),MainInicio.class);
                         i.putExtra("codPDA", codPDA);
-                        i.putExtra("tipoIS", tipoIS);
-                        i.putExtra("descIS", descIS);
                         startActivity(i);
                     }
                     else {
@@ -169,7 +164,7 @@ public class Pedateador extends AppCompatActivity {
 
 
                     // Verificar check
-
+/*
                     if (radio_ingreso.isChecked() == true){
                         tipoIS = "0";
                         descIS = "Ingreso";
@@ -179,7 +174,7 @@ public class Pedateador extends AppCompatActivity {
                     }else{
                         tipoIS = "9";
                         descIS = "Otros";
-                    }
+                    }*/
 
                     if(codPDA.isEmpty()){
                         Toast.makeText(getApplicationContext(),"Ingrese un DNI",Toast.LENGTH_LONG).show();
@@ -188,8 +183,6 @@ public class Pedateador extends AppCompatActivity {
                     else {
                         if ( longitud != 8) {
                             Toast.makeText(getApplicationContext(),"El DNI debe tener 8 dígitos, ",Toast.LENGTH_LONG).show();
-                        }else if(tipoIS == "9"){
-                            Toast.makeText(getApplicationContext(),"Ingresar Ingreso / Salida, ",Toast.LENGTH_LONG).show();
                         }else if(db.miIdSucursal().length()!=3){
 
                             Toast.makeText(getApplicationContext(),"PDA no Activo"+"|"+db.miIdSucursal(),Toast.LENGTH_LONG).show();
@@ -201,8 +194,6 @@ public class Pedateador extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
                             Intent ii =new Intent(getApplicationContext(),MainInicio.class);
                             ii.putExtra("codPDA", codPDA);
-                            ii.putExtra("tipoIS", tipoIS);
-                            ii.putExtra("descIS", descIS);
                             startActivity(ii);
                         }
                         else {
@@ -232,7 +223,7 @@ public class Pedateador extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_pedateador, menu);
         return true;
     }
 

@@ -21,6 +21,8 @@ import android.text.InputType;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String codPDA, tipoIS, descIS;
     private LinearLayout linearRegistro;
     private ImageView ivLogoTipo;
-
+    private Switch swTipoRegistro;
 
 
     private String fechaLectura = (DateFormat.format("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis()).toString());
@@ -120,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvConteoNS = (TextView) findViewById(R.id.tvConteoNS);
         tvHostname = (TextView) findViewById(R.id.tvHostname);
         linearRegistro = (LinearLayout)findViewById(R.id.activity_main);
+        swTipoRegistro = (Switch)findViewById(R.id.swTipoRegistro);
 
         //Toast.makeText(this, db.miSucursal(), Toast.LENGTH_LONG).show();
 
@@ -129,9 +133,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //adding click listener to button
         buttonSave.setOnClickListener(this);
-
-
-
 
         btnSync.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,6 +159,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        // Verificación de Switch Ingreso / Salida
+
+        if (swTipoRegistro.isChecked()){
+            tipoIS = "0";
+            descIS = "Ingreso";
+        }else{
+            tipoIS = "1";
+            descIS = "Salida";
+        }
+
 
         btnRepo01.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,8 +188,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //dscSucursal = bundle.getString("dscSucursal");
         tipoIngreso = bundle.getString("tipoIngreso");
         codPDA = bundle.getString("codPDA");
-        tipoIS = bundle.getString("tipoIS");
-        descIS = bundle.getString("descIS");
 
 
         tvBus.setText(placaBus);
@@ -210,6 +219,55 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //registering the broadcast receiver to update sync status
         registerReceiver(broadcastReceiver, new IntentFilter(DATA_SAVED_BROADCAST));
+    }
+
+    //Prueba de Menus
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_registro, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.sinc_asistencia) {
+            Cursor cursor = db.getUnsyncedNames();
+            //NetworkStateChecker netw = nt.saveName();
+            if (cursor.moveToFirst()) {
+                do {
+                    //calling the method to save the unsynced name to MySQL
+                    saveNameMA(
+                            cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_ID)),
+                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME)),
+                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DNI)),
+                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_PLACA)),
+                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IDSUCURSAL)),
+                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_HOSTNAME)),
+                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_FECHAREGISTRO)),
+                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_PEDATEADOR)),
+                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IDTRASLADO)),
+                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IDTIPO))
+                    );
+                } while (cursor.moveToNext());
+            }
+            return true;
+
+        }
+        if(id == R.id.repo_asistencia)
+        {
+            Intent i =new Intent(getApplicationContext(),an_reporteplaca.class);
+            startActivity(i);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void loadNames() {

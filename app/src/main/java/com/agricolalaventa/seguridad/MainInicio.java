@@ -26,7 +26,7 @@ public class MainInicio extends AppCompatActivity {
     private RadioButton  radio_bus, radio_moto, radio_vehiculo, radio_peatonal;
     private RadioGroup radio_opciones;
     private TextView codPdaAcceso;
-    private String codPDA, tipoIS, descIS;
+    private String codPDA;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +50,6 @@ public class MainInicio extends AppCompatActivity {
         // Recogemos codPDA del activity Pedateador
         Bundle bundle = getIntent().getExtras();
         codPDA = bundle.getString("codPDA");
-        tipoIS = bundle.getString("tipoIS");
-        descIS = bundle.getString("descIS");
         //codPdaAcceso.setText(codPDA);
 
         boolean estado = radio_moto.isChecked();
@@ -60,7 +58,7 @@ public class MainInicio extends AppCompatActivity {
         ArrayAdapter <String> adapterS = new ArrayAdapter<String>(this,R.layout.spinner_item_sucursal, opciones);
         //spinner.setAdapter(adapterS);
 
-        tvTitInicio.setText("Registro de "+descIS);
+        //tvTitInicio.setText("Registro de "+descIS);
 
         edtPlaca.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
 
@@ -151,8 +149,6 @@ public class MainInicio extends AppCompatActivity {
                                 //a1.putExtra("dscSucursal", dscSucursal);
                                 a1.putExtra("tipoIngreso", tipoIngreso);
                                 a1.putExtra("codPDA", codPDA);
-                                a1.putExtra("tipoIS", tipoIS);
-                                a1.putExtra("descIS", descIS);
                                 startActivity(a1);
                             }
 
@@ -170,8 +166,6 @@ public class MainInicio extends AppCompatActivity {
                                 //a2.putExtra("dscSucursal", dscSucursal);
                                 a2.putExtra("tipoIngreso", tipoIngreso);
                                 a2.putExtra("codPDA", codPDA);
-                                a2.putExtra("tipoIS", tipoIS);
-                                a2.putExtra("descIS", descIS);
                                 startActivity(a2);
                                 //finish();
 
@@ -192,8 +186,6 @@ public class MainInicio extends AppCompatActivity {
                                 //a3.putExtra("dscSucursal", dscSucursal);
                                 a3.putExtra("tipoIngreso", tipoIngreso);
                                 a3.putExtra("codPDA", codPDA);
-                                a3.putExtra("tipoIS", tipoIS);
-                                a3.putExtra("descIS", descIS);
                                 startActivity(a3);
                             }
                             break;
@@ -209,8 +201,6 @@ public class MainInicio extends AppCompatActivity {
                             //a4.putExtra("dscSucursal", dscSucursal);
                             a4.putExtra("tipoIngreso", tipoIngreso);
                             a4.putExtra("codPDA", codPDA);
-                            a4.putExtra("tipoIS", tipoIS);
-                            a4.putExtra("descIS", descIS);
                             startActivity(a4);
 
                             break;
