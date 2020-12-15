@@ -23,7 +23,7 @@ import com.agricolalaventa.seguridad.db.DatabaseHelper;
 
 public class Main_Seguridad extends AppCompatActivity {
 
-    private TextView tvTitInicio, tvFechaInicio, tvTotalIngresos, tvTotalSalidas;
+    private TextView tvTitInicio, tvFechaInicio, tvTotalIngresos, tvTotalSalidas, tvTotalSync;
     private EditText edtSucursal, edtPlaca;
     private Button btnInicio;
     private String placa, dscSucursal, idSucursal, formaTraslado, mensaje;
@@ -58,6 +58,7 @@ public class Main_Seguridad extends AppCompatActivity {
         tvTipoIS = (TextView) findViewById(R.id.tvTipoIS);
         tvTotalIngresos = (TextView) findViewById(R.id.tvTotalIngresos);
         tvTotalSalidas = (TextView) findViewById(R.id.tvTotalSalidas);
+        tvTotalSync = (TextView) findViewById(R.id.tvTotalSync);
 
         //initializing views and objects
         db = new DatabaseHelper(this);
@@ -76,6 +77,7 @@ public class Main_Seguridad extends AppCompatActivity {
         // Mostrar Totales:
         tvTotalIngresos.setText(db.totalIngresos());
         tvTotalSalidas.setText(db.totalSalidas());
+        tvTotalSync.setText(db.totalSync()+"/"+db.totalDiario());
 
 
         edtPlaca.setFilters(new InputFilter[] {new InputFilter.AllCaps()});

@@ -128,10 +128,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public Cursor getNames(String placa) {
+    public Cursor getNames(String placa, String idtipo) {
         //String prueba = "MMMMMM";
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "SELECT id, status, dni, idreferencia, idsucursal, idpda, fecha, pedateador, idtraslado, idtipo FROM checkinout WHERE LENGTH(dni) = 8 and strftime('%Y-%m-%d',fecha) = date('now','localtime')  and idreferencia = '"+placa+"' order by id desc";
+        String sql = "SELECT id, status, dni, idreferencia, idsucursal, idpda, fecha, pedateador, idtraslado, idtipo FROM checkinout WHERE LENGTH(dni) = 8 and strftime('%Y-%m-%d',fecha) = date('now','localtime')  and idreferencia = '"+placa+"' and idtipo = '"+idtipo+"' order by id desc";
         Cursor c = db.rawQuery(sql, null);
         return c;
     }
@@ -146,9 +146,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public String totalNoSync(){
+    public String totalDiario(){
         String lsViaje="0";
-        String sql="select count(1) from checkinout WHERE length(dni) = 8 and status = 0 and strftime('%Y-%m-%d',fecha) = date('now','localtime')";
+        String sql="select count(1) from checkinout WHERE length(dni) = 8 and strftime('%Y-%m-%d',fecha) = date('now','localtime')";
         SQLiteDatabase db= getReadableDatabase();
         Cursor cursor= db.rawQuery(sql, null);
         if(cursor.moveToFirst()){

@@ -29,7 +29,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/swOpcionTipoRegistro">
+        app:layout_constraintTop_toBottomOf="@+id/tvTipoIS">
 
         <RadioButton
             android:id="@+id/radio_bus"
@@ -38,9 +38,9 @@
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:drawableStart="@drawable/ic_bus"
+            android:drawableLeft="@drawable/ic_bus"
             android:gravity="center_horizontal"
-            android:textAlignment="gravity"
-            android:drawableLeft="@drawable/ic_bus" />
+            android:textAlignment="gravity" />
 
         <RadioButton
             android:id="@+id/radio_moto"
@@ -105,27 +105,30 @@
         android:id="@+id/swOpcionTipoRegistro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Elegir tipo"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:onClick="onClick"
+        android:text="Elegir tipo"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTitInicio" />
 
     <TextView
         android:id="@+id/tvTipoIS"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="12dp"
         android:text="Ingreso"
+        android:textColor="#000000"
         android:textSize="28sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.535"
-        app:layout_constraintStart_toEndOf="@+id/swOpcionTipoRegistro"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTitInicio" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tvInfoIngreso"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="80dp"
@@ -138,7 +141,7 @@
         app:layout_constraintTop_toBottomOf="@+id/btnInicio" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tvInfoSalida"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="80dp"
@@ -148,32 +151,58 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/tvInfoIngreso" />
 
     <TextView
         android:id="@+id/tvTotalIngresos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginLeft="60dp"
         android:layout_marginTop="32dp"
         android:text="0"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintStart_toEndOf="@+id/tvInfoIngreso"
         app:layout_constraintTop_toBottomOf="@+id/btnInicio" />
 
     <TextView
         android:id="@+id/tvTotalSalidas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="43dp"
-        android:layout_marginLeft="43dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginLeft="72dp"
         android:layout_marginTop="8dp"
         android:text="0"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintStart_toEndOf="@+id/tvInfoSalida"
         app:layout_constraintTop_toBottomOf="@+id/tvTotalIngresos" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="8dp"
+        android:text="Sincronizados"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvInfoSalida" />
+
+    <TextView
+        android:id="@+id/tvTotalSync"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="21dp"
+        android:layout_marginLeft="21dp"
+        android:layout_marginTop="8dp"
+        android:text="0/0"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/tvTotalSalidas" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

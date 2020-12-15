@@ -189,7 +189,7 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
        // tvConteo.setText(conteo);
 
         tvConteoSN.setText(db.totalSync());
-        tvConteoNS.setText(db.totalNoSync());
+        //tvConteoNS.setText(db.totalNoSync());
 
         // INICIO PRUEBAS ENTER
 
@@ -266,13 +266,14 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         names.clear();
         // Contador
         tvConteoSN.setText(db.totalSync());
-        tvConteoNS.setText(db.totalNoSync());
+        tvConteoNS.setText(db.totalDiario());
         // tvHostname.setText(hostname()+ " | " +fechaActual());
         tvHostname.setText(hostname());
         cargarPreferenciasTraslado();
+        cargarTipoIS();
 
-        Cursor cursor = db.getNames(placaBus);
-        Toast.makeText(getApplicationContext(), "placa: "+placaBus, Toast.LENGTH_LONG).show();
+        Cursor cursor = db.getNames(placaBus, tipoIS);
+        Toast.makeText(getApplicationContext(), "placa: "+placaBus+tipoIS, Toast.LENGTH_LONG).show();
         if (cursor.moveToFirst()) {
             do {
                 Name registro = new Name(
@@ -331,7 +332,7 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
 
         // Contador
         tvConteoSN.setText(db.totalSync());
-        tvConteoNS.setText(db.totalNoSync());
+        //tvConteoNS.setText(db.totalNoSync());
         //tvHostname.setText(hostname()+ " | " +fechaActual());
         tvHostname.setText(hostname());
 
@@ -392,7 +393,7 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         refreshList();
         // Contador
         tvConteoSN.setText(db.totalSync());
-        tvConteoNS.setText(db.totalNoSync());
+        //tvConteoNS.setText(db.totalNoSync());
         //tvHostname.setText(hostname()+ " | " +fechaActual());
         tvHostname.setText(hostname());
     }
