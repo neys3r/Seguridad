@@ -24,7 +24,7 @@ public class DBContract {
         public static String DNI = "dni";
         public static String IDREFERENCIA = "idreferencia";
         public static String IDSUCURSAL = "idsucursal";
-        public static String HOSTNAME = "hostname";
+        public static String IDPDA = "idpda";
         public static String FECHA = "fecha";
         public static String PEDATEADOR = "pedateador";
         public static String IDTRASLADO = "idtraslado";
@@ -32,7 +32,7 @@ public class DBContract {
     }
 
     public static class Pdas implements BaseColumns{
-        public static String ID = "id";
+        public static String IDPDA = "idpda";
         public static String NOMBRE = "nombre";
         public static String IDSUCURSAL = "idsucursal";
         public static String DESCSUCURSAL = "descsucursal";

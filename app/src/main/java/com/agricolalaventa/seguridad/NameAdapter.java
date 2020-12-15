@@ -40,7 +40,7 @@ public class NameAdapter extends ArrayAdapter<Name> {
         Name name = names.get(position);
 
         //setting the name to textview
-        textViewName.setText(name.getName());
+        textViewName.setText(name.getDni());
 
         if (name.getStatus() == 0)
             imageViewStatus.setBackgroundResource(R.drawable.stopwatch);

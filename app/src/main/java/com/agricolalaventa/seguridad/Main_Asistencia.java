@@ -115,7 +115,7 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
 
         tvFecha.setText(fechaLectura2);
         //tvHostname.setText(hostname()+ " | " +fechaActual());
-        tvHostname.setText(macbluetooth());
+        tvHostname.setText(hostname());
 
         //adding click listener to button
         buttonSave.setOnClickListener(this);
@@ -132,11 +132,10 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
                         //calling the method to save the unsynced name to MySQL
                         saveNameMA(
                                 cursor.getInt(cursor.getColumnIndex(DBContract.Checkinout.ID)),
-                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.NOMBRE)),
                                 cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.DNI)),
                                 cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDREFERENCIA)),
                                 cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDSUCURSAL)),
-                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.HOSTNAME)),
+                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDPDA)),
                                 cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.FECHA)),
                                 cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.PEDATEADOR)),
                                 cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDTRASLADO)),
@@ -230,11 +229,10 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
                     //calling the method to save the unsynced name to MySQL
                     saveNameMA(
                             cursor.getInt(cursor.getColumnIndex(DBContract.Checkinout.ID)),
-                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.NOMBRE)),
                             cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.DNI)),
                             cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDREFERENCIA)),
                             cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDSUCURSAL)),
-                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.HOSTNAME)),
+                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDPDA)),
                             cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.FECHA)),
                             cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.PEDATEADOR)),
                             cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDTRASLADO)),
@@ -260,24 +258,24 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         tvConteoSN.setText(db.totalSync());
         tvConteoNS.setText(db.totalNoSync());
         // tvHostname.setText(hostname()+ " | " +fechaActual());
-        tvHostname.setText(macbluetooth());
+        tvHostname.setText(hostname());
 
         Cursor cursor = db.getNames();
         if (cursor.moveToFirst()) {
             do {
-                Name name = new Name(
-                        cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.NOMBRE)),
+                Name registro = new Name(
+
                         cursor.getInt(cursor.getColumnIndex(DBContract.Checkinout.STATUS)),
                         cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.DNI)),
                         cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDREFERENCIA)),
                         cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDSUCURSAL)),
-                        cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.HOSTNAME)),
+                        cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDPDA)),
                         cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.FECHA)),
                         cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.PEDATEADOR)),
                         cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDTRASLADO)),
                         cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDTIPO))
                 );
-                names.add(name);
+                names.add(registro);
             } while (cursor.moveToNext());
         }
 
@@ -307,12 +305,12 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         cargarTipoIS();
 
         //final String name = fechaActual()+"|"+idSucursal+"|"+placaBus+"|"+tipoIngreso+"|"+tipoIS+"|"+codPDA+"|"+editTextName.getText().toString().trim()+"|"+hostname();
-        final String name = editTextName.getText().toString().trim();
+        //final String name = editTextName.getText().toString().trim();
         final String dni = editTextName.getText().toString().trim();
-        final String placa = placaBus;
+        final String idreferencia = placaBus;
         final String idsucursal = idSucursal;
-        final String hostname = hostname();
-        final String fecharegistro = fechaActual();
+        final String idpda = hostname();
+        final String fecha = fechaActual();
         final String pedateador = codPDA;
         final String idtraslado = tipoIngreso;
         final String idtipo = tipoIS;
@@ -323,7 +321,7 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         tvConteoSN.setText(db.totalSync());
         tvConteoNS.setText(db.totalNoSync());
         //tvHostname.setText(hostname()+ " | " +fechaActual());
-        tvHostname.setText(macbluetooth());
+        tvHostname.setText(hostname());
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_SAVE_NAME,
                 new Response.Listener<String>() {
@@ -335,11 +333,11 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
                             if (!obj.getBoolean("error")) {
                                 //if there is a success
                                 //storing the name to sqlite with status synced
-                                saveNameToLocalStorage(name, NAME_SYNCED_WITH_SERVER, dni, placa, idsucursal, hostname, fecharegistro, pedateador, idtraslado, idtipo);
+                                saveNameToLocalStorage( NAME_SYNCED_WITH_SERVER, dni, idreferencia, idsucursal, idpda, fecha, pedateador, idtraslado, idtipo);
                             } else {
                                 //if there is some error
                                 //saving the name to sqlite with status unsynced
-                                saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER, dni, placa, idsucursal, hostname, fecharegistro, pedateador, idtraslado, idtipo);
+                                saveNameToLocalStorage( NAME_NOT_SYNCED_WITH_SERVER, dni, idreferencia, idsucursal, idpda, fecha, pedateador, idtraslado, idtipo);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -351,18 +349,17 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
                     public void onErrorResponse(VolleyError error) {
                         progressDialog.dismiss();
                         //on error storing the name to sqlite with status unsynced
-                        saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER, dni, placa, idsucursal, hostname, fecharegistro, pedateador, idtraslado, idtipo);
+                        saveNameToLocalStorage( NAME_NOT_SYNCED_WITH_SERVER, dni, idreferencia, idsucursal, idpda, fecha, pedateador, idtraslado, idtipo);
                     }
                 }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("name", name);
                 params.put("dni", dni);
-                params.put("placa", placa);
+                params.put("idreferencia", idreferencia);
                 params.put("idsucursal", idsucursal);
-                params.put("hostname", hostname);
-                params.put("fecharegistro", fecharegistro);
+                params.put("idpda", idpda);
+                params.put("fecha", fecha);
                 params.put("pedateador", pedateador);
                 params.put("idtraslado", idtraslado);
                 params.put("idtipo", idtipo);
@@ -374,18 +371,18 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
     }
 
     //saving the name to local storage
-    private void saveNameToLocalStorage(String name, int status, String dni, String placa, String idsucursal, String hostname, String fecharegistro, String pedateador, String idtraslado, String idtipo) {
+    private void saveNameToLocalStorage(int status, String dni, String idreferencia, String idsucursal, String idpda, String fecha, String pedateador, String idtraslado, String idtipo) {
         editTextName.setText("");
 
-        db.addName(name, status, dni, placa, idsucursal, hostname, fecharegistro, pedateador, idtraslado, idtipo);
-        Name n = new Name(name, status, dni, placa, idsucursal, hostname, fecharegistro, pedateador, idtraslado, idtipo);
+        db.addName(status, dni, idreferencia, idsucursal, idpda, fecha, pedateador, idtraslado, idtipo);
+        Name n = new Name(status, dni, idreferencia, idsucursal, idpda, fecha, pedateador, idtraslado, idtipo);
         names.add(n);
         refreshList();
         // Contador
         tvConteoSN.setText(db.totalSync());
         tvConteoNS.setText(db.totalNoSync());
         //tvHostname.setText(hostname()+ " | " +fechaActual());
-        tvHostname.setText(macbluetooth());
+        tvHostname.setText(hostname());
     }
 
     // ATRIBUTOS DE DISPOSITIVO
@@ -397,12 +394,12 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
     }
 
     private String hostname(){
-        return Settings.Secure.getString(getContentResolver(), "bluetooth_name");
+        return db.seriePda();
     }
 
     private String macbluetooth(){
         //return UUID.randomUUID().toString();
-        return Build.SERIAL+"|"+db.miIdSucursal()+"|"+db.miDescSucursal()+"|"+db.existeVigilante(codPDA);
+        return db.seriePda();
     }
 
     private String seriePda(){
@@ -458,7 +455,7 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         finishAffinity();
     }
 
-    private void saveNameMA(final int id, final String name, final String dni, final String placa, final String idsucursal, final String hostname, final String fecharegistro, final String pedateador, final String idtraslado, final String idtipo ) {
+    private void saveNameMA(final int id, final String dni, final String idreferencia, final String idsucursal, final String hostname, final String fecha, final String pedateador, final String idtraslado, final String idtipo ) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Main_Asistencia.URL_SAVE_NAME,
                 new Response.Listener<String>() {
                     @Override
@@ -486,12 +483,11 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("name", name);
                 params.put("dni", dni);
-                params.put("placa", placa);
+                params.put("idreferencia", idreferencia);
                 params.put("idsucursal", idsucursal);
                 params.put("hostname", hostname);
-                params.put("fecharegistro", fecharegistro);
+                params.put("fecha", fecha);
                 params.put("pedateador", pedateador);
                 params.put("idtraslado", idtraslado);
                 params.put("idtipo", idtipo);

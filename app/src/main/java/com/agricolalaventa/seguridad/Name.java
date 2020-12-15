@@ -1,23 +1,18 @@
 package com.agricolalaventa.seguridad;
 
 public class Name {
-    private String name, dni, placa, idsucursal, hostname, fecharegistro, idtraslado, idtipo;
+    private String dni, idreferencia, idsucursal, idpda, fecha, idtraslado, idtipo;
     private int status;
 
-    public Name(String name, int status, String dni, String placa, String idsucursal, String hostname, String fecharegistro, String pedateador, String idtraslado, String idtipo ) {
-        this.name = name;
+    public Name( int status, String dni, String idreferencia, String idsucursal, String idpda, String fecha, String pedateador, String idtraslado, String idtipo ) {
         this.status = status;
         this.dni = dni;
-        this.placa = placa;
+        this.idreferencia = idreferencia;
         this.idsucursal = idsucursal;
-        this.hostname = hostname;
-        this.fecharegistro = fecharegistro;
+        this.idpda = idpda;
+        this.fecha = fecha;
         this.idtraslado = idtraslado;
         this.idtipo = idtipo;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public int getStatus() {
@@ -28,8 +23,8 @@ public class Name {
         return dni;
     }
 
-    public String getPlaca() {
-        return placa;
+    public String getIdreferencia() {
+        return idreferencia;
     }
 
     public String getIdsucursal() {
@@ -40,20 +35,20 @@ public class Name {
         this.idsucursal = idsucursal;
     }
 
-    public String getHostname() {
-        return hostname;
+    public String getIdpda() {
+        return idpda;
     }
 
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
+    public void setIdpda(String idpda) {
+        this.idpda = idpda;
     }
 
-    public String getFecharegistro() {
-        return fecharegistro;
+    public String getFecha() {
+        return fecha;
     }
 
-    public void setFecharegistro(String fecharegistro) {
-        this.fecharegistro = fecharegistro;
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
     }
 
     public String getIdtraslado() {

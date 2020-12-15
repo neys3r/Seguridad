@@ -60,7 +60,7 @@ public class Pedateador extends AppCompatActivity {
         tvSincronizacion = (TextView)findViewById(R.id.tvSincronizacion);
 
         // Impedir Ingreso manual de DNI
-        edtVigilante.setInputType(InputType.TYPE_NULL);
+        //edtVigilante.setInputType(InputType.TYPE_NULL);
         cargarPreferenciasSync();
 
         // Sincronización
@@ -240,7 +240,7 @@ public class Pedateador extends AppCompatActivity {
                         for(int i = 0; i<array.length(); i++)
                         {
                             JSONObject object = array.getJSONObject(i);
-                            database.savePdas(object.getString("id"),object.getString("nombre"),object.getString("idsucursal"),object.getString("descsucursal"),db);
+                            database.savePdas(object.getString("idpda"),object.getString("nombre"),object.getString("idsucursal"),object.getString("descsucursal"),db);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

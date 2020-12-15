@@ -48,11 +48,10 @@ public class NetworkStateChecker extends BroadcastReceiver {
                         //calling the method to save the unsynced name to MySQL
                         saveName(
                                 cursor.getInt(cursor.getColumnIndex(DBContract.Checkinout.ID)),
-                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.NOMBRE)),
                                 cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.DNI)),
                                 cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDREFERENCIA)),
                                 cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDSUCURSAL)),
-                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.HOSTNAME)),
+                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDPDA)),
                                 cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.FECHA)),
                                 cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.PEDATEADOR)),
                                 cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDTRASLADO)),
@@ -64,7 +63,7 @@ public class NetworkStateChecker extends BroadcastReceiver {
         }
     }
 
-    private void saveName(final int id, final String name, final String dni, final String placa, final String idsucursal, final String hostname, final String fecharegistro, final String pedateador, final String idtraslado, final String idtipo ) {
+    private void saveName(final int id, final String dni, final String idreferencia, final String idsucursal, final String idpda, final String fecha, final String pedateador, final String idtraslado, final String idtipo ) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Main_Asistencia.URL_SAVE_NAME,
                 new Response.Listener<String>() {
                     @Override
@@ -92,12 +91,11 @@ public class NetworkStateChecker extends BroadcastReceiver {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("name", name);
                 params.put("dni", dni);
-                params.put("placa", placa);
+                params.put("idreferencia", idreferencia);
                 params.put("idsucursal", idsucursal);
-                params.put("hostname", hostname);
-                params.put("fecharegistro", fecharegistro);
+                params.put("idpda", idpda);
+                params.put("fecha", fecha);
                 params.put("pedateador", pedateador);
                 params.put("idtraslado", idtraslado);
                 params.put("idtipo", idtipo);

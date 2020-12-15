@@ -15,9 +15,7 @@ import java.util.HashMap;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    //Constants for Database name, table name, and column names
     public static final String DB_NAME = "security.db";
-    //public static final String TABLE_NAME = "names3";
     public static final String VIEW_REPO01 = "repo01";
 
     //database version
@@ -48,7 +46,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     {
         db.execSQL("CREATE TABLE "+DBContract.TABLE_ASISTENCIA+"("+DBContract.Checkinout.ID+" INTEGER PRIMARY KEY,"+DBContract.Checkinout.NOMBRE+" VARCHAR," +
                 ""+DBContract.Checkinout.STATUS+" VARCHAR,"+DBContract.Checkinout.DNI+" VARCHAR,"+DBContract.Checkinout.IDREFERENCIA+" VARCHAR,"+DBContract.Checkinout.IDSUCURSAL+" VARCHAR,"+
-                ""+DBContract.Checkinout.HOSTNAME+" VARCHAR,"+DBContract.Checkinout.FECHA+" VARCHAR,"+DBContract.Checkinout.PEDATEADOR+" VARCHAR,"+
+                ""+DBContract.Checkinout.IDPDA+" VARCHAR,"+DBContract.Checkinout.FECHA+" VARCHAR,"+DBContract.Checkinout.PEDATEADOR+" VARCHAR,"+
                 ""+DBContract.Checkinout.IDTRASLADO+" VARCHAR,"+DBContract.Checkinout.IDTIPO+" VARCHAR);");
     }
 
@@ -60,7 +58,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void createPdas(SQLiteDatabase db)
     {
-        db.execSQL("CREATE TABLE "+DBContract.TABLE_PDAS+"("+DBContract.Pdas.ID+" TEXT PRIMARY KEY,"+DBContract.Pdas.NOMBRE+" TEXT," +
+        db.execSQL("CREATE TABLE "+DBContract.TABLE_PDAS+"("+DBContract.Pdas.IDPDA+" TEXT PRIMARY KEY,"+DBContract.Pdas.NOMBRE+" TEXT," +
                 ""+DBContract.Pdas.IDSUCURSAL+" TEXT,"+DBContract.Pdas.DESCSUCURSAL+" TEXT);");
     }
 
@@ -70,10 +68,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 ""+DBContract.Vigilantes.ESTADO+" TEXT,"+DBContract.Vigilantes.IDAREA+" TEXT);");
     }
 
-    public void savePdas(String id,String nombre,String idsucursal,String descsucursal, SQLiteDatabase db)
+    public void savePdas(String idpda,String nombre,String idsucursal,String descsucursal, SQLiteDatabase db)
     {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(DBContract.Pdas.ID,id);
+        contentValues.put(DBContract.Pdas.IDPDA,idpda);
         contentValues.put(DBContract.Pdas.NOMBRE,nombre);
         contentValues.put(DBContract.Pdas.IDSUCURSAL,idsucursal);
         contentValues.put(DBContract.Pdas.DESCSUCURSAL,descsucursal);
@@ -103,16 +101,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public boolean addName(String name, int status, String dni, String idreferencia, String idsucursal, String hostname, String fecha, String pedateador, String idtraslado, String idtipo) {
+    public boolean addName( int status, String dni, String idreferencia, String idsucursal, String idpda, String fecha, String pedateador, String idtraslado, String idtipo) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put("name", name);
         contentValues.put("status", status);
         contentValues.put("dni", dni);
         contentValues.put("idreferencia", idreferencia);
         contentValues.put("idsucursal", idsucursal);
-        contentValues.put("hostname", hostname);
+        contentValues.put("idpda", idpda);
         contentValues.put("fecha", fecha);
         contentValues.put("pedateador", pedateador);
         contentValues.put("idtraslado", idtraslado);
@@ -136,9 +133,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Cursor getNames() {
         SQLiteDatabase db = this.getReadableDatabase();
-        //String sql = "SELECT id, Substr(name,32,8) as name  FROM names WHERE LENGTH(NAME) = 39 order by id";
-        String sql = "SELECT id, name, status, dni, idreferencia, idsucursal, hostname, fecha, pedateador, idtraslado, idtipo FROM " + "checkinout" + " WHERE LENGTH(dni) = 8 and strftime('%Y-%m-%d',fecha) = strftime('%Y-%m-%d','now') order by  id";
-        //String sql = "SELECT * FROM " + TABLE_NAME + " WHERE LENGTH(NAME) = 39 ORDER BY " + COLUMN_ID + " ASC;";
+        String sql = "SELECT id, status, dni, idreferencia, idsucursal, idpda, fecha, pedateador, idtraslado, idtipo FROM " + "checkinout" + " WHERE LENGTH(dni) = 8 and strftime('%Y-%m-%d',fecha) = strftime('%Y-%m-%d','now') order by  id";
         Cursor c = db.rawQuery(sql, null);
         return c;
     }
@@ -146,7 +141,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Cursor getUnsyncedNames() {
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "SELECT * FROM " + "checkinout" + " WHERE LENGTH(dni) = 8 and strftime('%Y-%m-%d',fecha) = strftime('%Y-%m-%d','now') and  " + "status" + " = 0 ;";
+        String sql = "SELECT id, status, dni, idreferencia, idsucursal, idpda, fecha, pedateador, idtraslado, idtipo FROM " + "checkinout" + " WHERE LENGTH(dni) = 8 and strftime('%Y-%m-%d',fecha) = strftime('%Y-%m-%d','now') and  " + "status" + " = 0 ;";
         //String sql = "SELECT * FROM " + TABLE_NAME + " WHERE  " + COLUMN_STATUS + " = 0 ;";
         Cursor c = db.rawQuery(sql, null);
         return c;
@@ -168,7 +163,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public String miIdSucursal(){
         String lsViaje="0";
-        String sql="SELECT idsucursal FROM pdas where id = '"+ seriePda() +"';";
+        String sql="SELECT idsucursal FROM pdas where idpda = '"+ seriePda() +"';";
         SQLiteDatabase db= getReadableDatabase();
         Cursor cursor= db.rawQuery(sql, null);
         if(cursor.moveToFirst()){
@@ -189,7 +184,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public String miDescSucursal(){
         String lsViaje="0";
-        String sql="SELECT descsucursal FROM pdas where id = '"+ Build.SERIAL +"';";
+        String sql="SELECT descsucursal FROM pdas where idpda = '"+ Build.SERIAL +"';";
         SQLiteDatabase db= getReadableDatabase();
         Cursor cursor= db.rawQuery(sql, null);
         if(cursor.moveToFirst()){
