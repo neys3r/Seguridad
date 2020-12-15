@@ -7,6 +7,9 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.agricolalaventa.seguridad.Modelos.Main_Asistencia;
+import com.agricolalaventa.seguridad.db.DBContract;
+import com.agricolalaventa.seguridad.db.DatabaseHelper;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;

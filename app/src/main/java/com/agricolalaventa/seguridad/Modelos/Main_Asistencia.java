@@ -1,4 +1,4 @@
-package com.agricolalaventa.seguridad;
+package com.agricolalaventa.seguridad.Modelos;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,7 +12,6 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +23,14 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.agricolalaventa.seguridad.db.DBContract;
+import com.agricolalaventa.seguridad.db.DatabaseHelper;
+import com.agricolalaventa.seguridad.Name;
+import com.agricolalaventa.seguridad.NameAdapter;
+import com.agricolalaventa.seguridad.NetworkStateChecker;
+import com.agricolalaventa.seguridad.R;
+import com.agricolalaventa.seguridad.VolleySingleton;
+import com.agricolalaventa.seguridad.an_reporteplaca;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -156,7 +163,7 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         btnRepo01.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i =new Intent(getApplicationContext(),an_reporteplaca.class);
+                Intent i =new Intent(getApplicationContext(), an_reporteplaca.class);
                 startActivity(i);
             }
         });
@@ -165,12 +172,14 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         dscSucursal = db.miDescSucursal();
 
         // Recogemos placaBus y idSucursal de MainInicio
-        Bundle bundle = getIntent().getExtras();
-        placaBus = bundle.getString("placaBus");
+        //Bundle bundle = getIntent().getExtras();
         //idSucursal = bundle.getString("idSucursal");
         //dscSucursal = bundle.getString("dscSucursal");
-        tipoIngreso = bundle.getString("tipoIngreso");
+
+        //placaBus = bundle.getString("placaBus");
+        //tipoIngreso = bundle.getString("tipoIngreso");
         //codPDA = bundle.getString("codPDA");
+        cargarPreferenciasTraslado();
 
 
         tvBus.setText(placaBus);
@@ -513,6 +522,13 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         tipoIS = preferencias.getString("idTipoIS", "No existe Info");
         descIS = preferencias.getString("descTipoIS", "No existe Info");
         tvTitulo.setText("Registro de"+descIS);
+    }
+
+    private void cargarPreferenciasTraslado(){
+        SharedPreferences preferencias = getSharedPreferences
+                ("datosTraslado", Context.MODE_PRIVATE);
+        placaBus = preferencias.getString("idreferencia", "No existe Info");
+        tipoIngreso = preferencias.getString("idtraslado", "No existe Info");
     }
 
 

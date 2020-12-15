@@ -1,4 +1,4 @@
-package com.agricolalaventa.seguridad;
+package com.agricolalaventa.seguridad.db;
 
 import android.provider.BaseColumns;
 
@@ -19,7 +19,6 @@ public class DBContract {
 
     public static class Checkinout implements BaseColumns {
         public static String ID = "id";
-        public static String NOMBRE = "name";
         public static String STATUS = "status";
         public static String DNI = "dni";
         public static String IDREFERENCIA = "idreferencia";

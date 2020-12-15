@@ -1,4 +1,4 @@
-package com.agricolalaventa.seguridad;
+package com.agricolalaventa.seguridad.Modelos;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,18 +17,23 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.agricolalaventa.seguridad.Modelos.Main_Asistencia;
+import com.agricolalaventa.seguridad.R;
+import com.agricolalaventa.seguridad.db.DatabaseHelper;
+
 public class Main_Seguridad extends AppCompatActivity {
 
-    private TextView tvTitInicio, tvFechaInicio;
+    private TextView tvTitInicio, tvFechaInicio, tvTotalIngresos, tvTotalSalidas;
     private EditText edtSucursal, edtPlaca;
     private Button btnInicio;
-    private String placaBus, dscSucursal, idSucursal, tipoIngreso, mensaje;
+    private String placa, dscSucursal, idSucursal, formaTraslado, mensaje;
     private int longitud;
     //private Spinner spinner;
     private RadioButton  radio_bus, radio_moto, radio_vehiculo, radio_peatonal;
     private RadioGroup radio_opciones;
     private TextView tvTipoIS, codPdaAcceso;
     private Switch swOpcionTipoRegistro;
+    private DatabaseHelper db;
     //private String codPDA;
 
     @Override
@@ -51,11 +56,11 @@ public class Main_Seguridad extends AppCompatActivity {
         radio_peatonal = (RadioButton)findViewById(R.id.radio_peatonal);
         swOpcionTipoRegistro = (Switch)findViewById(R.id.swOpcionTipoRegistro);
         tvTipoIS = (TextView) findViewById(R.id.tvTipoIS);
+        tvTotalIngresos = (TextView) findViewById(R.id.tvTotalIngresos);
+        tvTotalSalidas = (TextView) findViewById(R.id.tvTotalSalidas);
 
-        // Recogemos codPDA del activity Pedateador
-        //Bundle bundle = getIntent().getExtras();
-        //codPDA = bundle.getString("codPDA");
-        //codPdaAcceso.setText(codPDA);
+        //initializing views and objects
+        db = new DatabaseHelper(this);
 
         boolean estado = radio_moto.isChecked();
 
@@ -68,35 +73,9 @@ public class Main_Seguridad extends AppCompatActivity {
         // Cambiar Información TipoIngreso/Salida
          infoSwithc();
 
-        /*if (swOpcionTipoRegistro.isChecked()){
-            //Toast.makeText(getApplicationContext(),"Prueba 0", Toast.LENGTH_LONG).show();
-
-            SharedPreferences preferencias = getSharedPreferences
-                    ("datosTipoIS", Context.MODE_PRIVATE);
-            String idTipoIS = "0";
-            String descTipoIS = "Salida";
-            tvTipoIS.setText(descTipoIS);
-            tvTipoIS.setBackgroundColor(Integer.parseInt("#FF0000"));
-
-            SharedPreferences.Editor editor = preferencias.edit();
-            editor.putString("idTipoIS", idTipoIS);
-            editor.putString("descTipoIS", descTipoIS);
-            editor.commit();
-
-        }else{
-            SharedPreferences preferencias = getSharedPreferences
-                    ("datosTipoIS", Context.MODE_PRIVATE);
-            String idTipoIS = "0";
-            String descTipoIS = "Ingreso";
-            tvTipoIS.setText(descTipoIS);
-
-            SharedPreferences.Editor editor = preferencias.edit();
-            editor.putString("idTipoIS", idTipoIS);
-            editor.putString("descTipoIS", descTipoIS);
-            editor.commit();
-        }*/
-
-        // FIN
+        // Mostrar Totales:
+        tvTotalIngresos.setText(db.totalIngresos());
+        tvTotalSalidas.setText(db.totalSalidas());
 
 
         edtPlaca.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
@@ -112,16 +91,20 @@ public class Main_Seguridad extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Bus",Toast.LENGTH_LONG).show();
                     edtPlaca.setVisibility(View.VISIBLE);
                     edtPlaca.setHint("Placa Bus");
+                    //placa = edtPlaca.getText().toString();
                 }else if (checkedId == R.id.radio_moto){
                     Toast.makeText(getApplicationContext(),"Moto",Toast.LENGTH_LONG).show();
                     edtPlaca.setVisibility(View.INVISIBLE);
+                    placa = "MMMMMM";
                 }else if (checkedId == R.id.radio_vehiculo){
                     Toast.makeText(getApplicationContext(),"Vehiculo",Toast.LENGTH_LONG).show();
                     edtPlaca.setVisibility(View.VISIBLE);
-                    edtPlaca.setHint("Placa Vehiculo");
+                    //edtPlaca.setHint("Placa Vehiculo");
+                    placa = edtPlaca.getText().toString();
                 }else if (checkedId == R.id.radio_peatonal){
                     Toast.makeText(getApplicationContext(),"Peatonal",Toast.LENGTH_LONG).show();
                     edtPlaca.setVisibility(View.INVISIBLE);
+                    placa = "PPPPPP";
                 }
             }
 
@@ -133,11 +116,15 @@ public class Main_Seguridad extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                placaBus = edtPlaca.getText().toString();
+                //placaBus = edtPlaca.getText().toString();
                 //idSucursal = edtSucursal.getText().toString();
                 longitud = edtPlaca.getText().toString().length();
 
                 //String seleccion = spinner.getSelectedItem().toString();
+
+
+
+
 /*
                 if (seleccion.equals("Pinilla")){
                     idSucursal = "006";
@@ -160,33 +147,35 @@ public class Main_Seguridad extends AppCompatActivity {
                 // Seleccionar tipo de ingreso
 
                 if (radio_bus.isChecked() == true){
-                    tipoIngreso = "1";
+                    formaTraslado = "1";
+                    placa = edtPlaca.getText().toString();
                 } else if (radio_moto.isChecked() == true){
-                    tipoIngreso = "2";
+                    formaTraslado = "2";
                 } else if (radio_vehiculo.isChecked() == true){
-                    tipoIngreso = "3";
+                    formaTraslado = "3";
+                    placa = edtPlaca.getText().toString();
                 } else if (radio_peatonal.isChecked() == true){
-                    tipoIngreso = "4";
+                    formaTraslado = "4";
                 }else{
-                    tipoIngreso = "9";
+                    formaTraslado = "9";
                 }
 
                     //Toast.makeText(getApplicationContext(),"Seleccionar válida:T-"+tipoIngreso,Toast.LENGTH_LONG).show();
-                    switch (tipoIngreso){
+                    switch (formaTraslado){
                         case  "1":
 
                             if (longitud != 6 ){
                                 Toast.makeText(getApplicationContext(),"La placa del bus de tener 6 dígitos",Toast.LENGTH_LONG).show();
                             } else {
                                 //Muestra la lista de BUS
-                                mensaje = "Placa " + placaBus + "en Sede "+ idSucursal +" grabado ";
-                                Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
+                                //mensaje = "Placa " + placaBus + "en Sede "+ idSucursal +" grabado ";
+                                //Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
 
                                 Intent a1 =new Intent(getApplicationContext(), Main_Asistencia.class);
-                                a1.putExtra("placaBus", placaBus);
+                                //a1.putExtra("placaBus", placaBus);
                                 //a1.putExtra("idSucursal", idSucursal);
                                 //a1.putExtra("dscSucursal", dscSucursal);
-                                a1.putExtra("tipoIngreso", tipoIngreso);
+                                //a1.putExtra("tipoIngreso", tipoIngreso);
                                 //a1.putExtra("codPDA", codPDA);
                                 startActivity(a1);
                             }
@@ -200,10 +189,10 @@ public class Main_Seguridad extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
 
                                 Intent a2 =new Intent(getApplicationContext(), Main_Asistencia.class);
-                                a2.putExtra("placaBus", "MMMMMM");
+                                //a2.putExtra("placaBus", "MMMMMM");
                                 //a2.putExtra("idSucursal", idSucursal);
                                 //a2.putExtra("dscSucursal", dscSucursal);
-                                a2.putExtra("tipoIngreso", tipoIngreso);
+                                //a2.putExtra("tipoIngreso", tipoIngreso);
                                 //a2.putExtra("codPDA", codPDA);
                                 startActivity(a2);
                                 //finish();
@@ -216,14 +205,14 @@ public class Main_Seguridad extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(),"La placa del vehículo de tener 6 dígitos",Toast.LENGTH_LONG).show();
                             } else {
                                 //Muestra la lista de VEHICULO
-                                mensaje = "Placa " + placaBus + "en Sede "+ idSucursal +" grabado ";
+                                //mensaje = "Placa " + placaBus + "en Sede "+ idSucursal +" grabado ";
                                 Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
 
                                 Intent a3 =new Intent(getApplicationContext(), Main_Asistencia.class);
-                                a3.putExtra("placaBus", placaBus);
+                                //a3.putExtra("placaBus", placaBus);
                                 //a3.putExtra("idSucursal", idSucursal);
                                 //a3.putExtra("dscSucursal", dscSucursal);
-                                a3.putExtra("tipoIngreso", tipoIngreso);
+                                //a3.putExtra("tipoIngreso", tipoIngreso);
                                 //a3.putExtra("codPDA", codPDA);
                                 startActivity(a3);
                             }
@@ -232,13 +221,13 @@ public class Main_Seguridad extends AppCompatActivity {
                             //Muestra la lista de Frutas
 
                             mensaje = "Lista de Personal  " + "en Sede "+ idSucursal +" grabado ";
-                            Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
 
                             Intent a4 =new Intent(getApplicationContext(), Main_Asistencia.class);
-                            a4.putExtra("placaBus", "PPPPPP");
+                            //a4.putExtra("placaBus", "PPPPPP");
                             //a4.putExtra("idSucursal", idSucursal);
                             //a4.putExtra("dscSucursal", dscSucursal);
-                            a4.putExtra("tipoIngreso", tipoIngreso);
+                            //a4.putExtra("tipoIngreso", tipoIngreso);
                             //a4.putExtra("codPDA", codPDA);
                             startActivity(a4);
 
@@ -248,6 +237,10 @@ public class Main_Seguridad extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"Debes elegir un tipo de Ingreso válido",Toast.LENGTH_LONG).show();
                             break;
                     }
+
+                guardarPreferenciaTraslado();
+
+
                 //} -- eliminar
 
             }
@@ -261,34 +254,7 @@ public class Main_Seguridad extends AppCompatActivity {
     public void onClick(View view){
         if (view.getId()==R.id.swOpcionTipoRegistro){
             infoSwithc();
-        // Cambiar Información TipoIngreso/Salida
-            /*if (swOpcionTipoRegistro.isChecked()){
-                Toast.makeText(getApplicationContext(),"Switch Salida", Toast.LENGTH_LONG).show();
 
-                SharedPreferences preferencias = getSharedPreferences
-                        ("datosTipoIS", Context.MODE_PRIVATE);
-                String idTipoIS = "1";
-                String descTipoIS = "Salida";
-                tvTipoIS.setText(descTipoIS);
-
-                SharedPreferences.Editor editor = preferencias.edit();
-                editor.putString("idTipoIS", idTipoIS);
-                editor.putString("descTipoIS", descTipoIS);
-                editor.commit();
-
-            }else{
-                Toast.makeText(getApplicationContext(),"Switch Ingreso", Toast.LENGTH_LONG).show();
-                SharedPreferences preferencias = getSharedPreferences
-                        ("datosTipoIS", Context.MODE_PRIVATE);
-                String idTipoIS = "0";
-                String descTipoIS = "Ingreso";
-                tvTipoIS.setText(descTipoIS);
-
-                SharedPreferences.Editor editor = preferencias.edit();
-                editor.putString("idTipoIS", idTipoIS);
-                editor.putString("descTipoIS", descTipoIS);
-                editor.commit();
-            }*/
         }
 
     }
@@ -321,6 +287,17 @@ public class Main_Seguridad extends AppCompatActivity {
             editor.putString("descTipoIS", descTipoIS);
             editor.commit();
         }
+    }
+
+    public void guardarPreferenciaTraslado(){
+        SharedPreferences preferencias = getSharedPreferences
+                ("datosTraslado", Context.MODE_PRIVATE);
+        String idreferencia = placa;
+        String idtraslado = formaTraslado;
+        SharedPreferences.Editor editor = preferencias.edit();
+        editor.putString("idreferencia", idreferencia);
+        editor.putString("idtraslado", idtraslado);
+        editor.commit();
     }
 
 

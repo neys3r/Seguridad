@@ -1,4 +1,4 @@
-package com.agricolalaventa.seguridad;
+package com.agricolalaventa.seguridad.db;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,9 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
-import android.text.format.DateFormat;
-
-import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +21,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     public DatabaseHelper(Context context) {
-        super(context,DBContract.DATABASE_NAME, null, DB_VERSION);
+        super(context, DBContract.DATABASE_NAME, null, DB_VERSION);
     }
 
     //creating the database
@@ -44,7 +41,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Métodos SQLITE
     public void createAsistencia(SQLiteDatabase db)
     {
-        db.execSQL("CREATE TABLE "+DBContract.TABLE_ASISTENCIA+"("+DBContract.Checkinout.ID+" INTEGER PRIMARY KEY,"+DBContract.Checkinout.NOMBRE+" VARCHAR," +
+        db.execSQL("CREATE TABLE "+DBContract.TABLE_ASISTENCIA+"("+DBContract.Checkinout.ID+" INTEGER PRIMARY KEY,"+
                 ""+DBContract.Checkinout.STATUS+" VARCHAR,"+DBContract.Checkinout.DNI+" VARCHAR,"+DBContract.Checkinout.IDREFERENCIA+" VARCHAR,"+DBContract.Checkinout.IDSUCURSAL+" VARCHAR,"+
                 ""+DBContract.Checkinout.IDPDA+" VARCHAR,"+DBContract.Checkinout.FECHA+" VARCHAR,"+DBContract.Checkinout.PEDATEADOR+" VARCHAR,"+
                 ""+DBContract.Checkinout.IDTRASLADO+" VARCHAR,"+DBContract.Checkinout.IDTIPO+" VARCHAR);");
@@ -133,7 +130,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Cursor getNames() {
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "SELECT id, status, dni, idreferencia, idsucursal, idpda, fecha, pedateador, idtraslado, idtipo FROM " + "checkinout" + " WHERE LENGTH(dni) = 8 and strftime('%Y-%m-%d',fecha) = strftime('%Y-%m-%d','now') order by  id";
+        String sql = "SELECT id, status, dni, idreferencia, idsucursal, idpda, fecha, pedateador, idtraslado, idtipo FROM " + "checkinout" + " WHERE LENGTH(dni) = 8 and strftime('%Y-%m-%d',fecha) = date('now','localtime') order by id desc";
         Cursor c = db.rawQuery(sql, null);
         return c;
     }
@@ -141,7 +138,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Cursor getUnsyncedNames() {
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "SELECT id, status, dni, idreferencia, idsucursal, idpda, fecha, pedateador, idtraslado, idtipo FROM " + "checkinout" + " WHERE LENGTH(dni) = 8 and strftime('%Y-%m-%d',fecha) = strftime('%Y-%m-%d','now') and  " + "status" + " = 0 ;";
+        String sql = "SELECT id, status, dni, idreferencia, idsucursal, idpda, fecha, pedateador, idtraslado, idtipo FROM " + "checkinout" + " WHERE LENGTH(dni) = 8 and strftime('%Y-%m-%d',fecha) = date('now','localtime') and  " + "status" + " = 0 ;";
         //String sql = "SELECT * FROM " + TABLE_NAME + " WHERE  " + COLUMN_STATUS + " = 0 ;";
         Cursor c = db.rawQuery(sql, null);
         return c;
@@ -150,7 +147,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public String totalNoSync(){
         String lsViaje="0";
-        String sql="select count(1) from checkinout WHERE length(dni) = 8 and status = 0 and strftime('%Y-%m-%d',fecha) = strftime('%Y-%m-%d','now')";
+        String sql="select count(1) from checkinout WHERE length(dni) = 8 and status = 0 and strftime('%Y-%m-%d',fecha) = date('now','localtime')";
         SQLiteDatabase db= getReadableDatabase();
         Cursor cursor= db.rawQuery(sql, null);
         if(cursor.moveToFirst()){
@@ -240,7 +237,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public String totalSync(){
         String lsViaje="0";
-        String sql="select count(1) from checkinout WHERE length(dni) = 8 and status = 1 and strftime('%Y-%m-%d',fecha) = strftime('%Y-%m-%d','now')";
+        String sql="select count(1) from checkinout WHERE length(dni) = 8 and status = 1 and strftime('%Y-%m-%d',fecha) = date('now','localtime')";
+        //String sql="select count(1) from checkinout WHERE length(dni) = 8 and status = 1 and strftime('%Y-%m-%d',fecha) = strftime('%Y-%m-%d','now')";
         SQLiteDatabase db= getReadableDatabase();
         Cursor cursor= db.rawQuery(sql, null);
         if(cursor.moveToFirst()){
@@ -250,5 +248,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return lsViaje;
     }
+
+    public String totalIngresos(){
+        String lsViaje="0";
+        String sql="select count(1) from checkinout WHERE length(dni) = 8 and status = 1 and strftime('%Y-%m-%d',fecha) = date('now','localtime') and idtipo = '0' ";
+        SQLiteDatabase db= getReadableDatabase();
+        Cursor cursor= db.rawQuery(sql, null);
+        if(cursor.moveToFirst()){
+            do {
+                lsViaje = cursor.getString(0);
+            }while (cursor.moveToNext());
+        }
+        return lsViaje;
+    }
+
+    public String totalSalidas(){
+        String lsViaje="0";
+        String sql="select count(1) from checkinout WHERE length(dni) = 8 and status = 1 and strftime('%Y-%m-%d',fecha) = date('now','localtime') and idtipo = '1' ";
+        SQLiteDatabase db= getReadableDatabase();
+        Cursor cursor= db.rawQuery(sql, null);
+        if(cursor.moveToFirst()){
+            do {
+                lsViaje = cursor.getString(0);
+            }while (cursor.moveToNext());
+        }
+        return lsViaje;
+    }
+
+
 
 }

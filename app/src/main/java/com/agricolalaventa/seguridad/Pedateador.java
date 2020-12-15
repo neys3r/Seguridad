@@ -25,6 +25,10 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.agricolalaventa.seguridad.Modelos.Main_RRHH;
+import com.agricolalaventa.seguridad.Modelos.Main_SST;
+import com.agricolalaventa.seguridad.Modelos.Main_Seguridad;
+import com.agricolalaventa.seguridad.db.DatabaseHelper;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -60,7 +64,7 @@ public class Pedateador extends AppCompatActivity {
         tvSincronizacion = (TextView)findViewById(R.id.tvSincronizacion);
 
         // Impedir Ingreso manual de DNI
-        //edtVigilante.setInputType(InputType.TYPE_NULL);
+        edtVigilante.setInputType(InputType.TYPE_NULL);
         cargarPreferenciasSync();
 
         // Sincronización

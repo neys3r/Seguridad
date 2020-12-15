@@ -1,8 +1,10 @@
-package com.agricolalaventa.seguridad;
+package com.agricolalaventa.seguridad.Modelos;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.agricolalaventa.seguridad.R;
 
 public class Main_SST extends AppCompatActivity {
 

@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".Main_Asistencia">
+    tools:context=".Modelos.Main_Asistencia">
     <item
         android:id="@+id/sinc_asistencia"
         android:title="Sincronizar" />
