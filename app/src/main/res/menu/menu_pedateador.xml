@@ -6,8 +6,8 @@
         android:id="@+id/sincronizar"
         android:title="Sincronizar" />
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_salir_login"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="Salir"
         app:showAsAction="never" />
 </menu>

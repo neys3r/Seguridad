@@ -10,7 +10,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.format.DateFormat;
@@ -42,7 +41,7 @@ public class Pedateador extends AppCompatActivity {
     private RadioGroup radio_tipo;
     private EditText edtVigilante;
     private Button btnGuardarVigilante, btnVerificarVigilante;
-    private String codPDA, mensaje, tipoIS, descIS, idvigilante;
+    private String codPDA, mensaje, tipoIS, descIS, idvigilante, idArea;
     private DatabaseHelper db;
     int longitud;
 
@@ -151,7 +150,7 @@ public class Pedateador extends AppCompatActivity {
                         mensaje = "DNI " + idvigilante + " grabado";
 
                         //Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
-                        Intent i =new Intent(getApplicationContext(),MainInicio.class);
+                        Intent i =new Intent(getApplicationContext(), MainSeguridad.class);
                         i.putExtra("codPDA", codPDA);
                         startActivity(i);
                     }
@@ -199,20 +198,36 @@ public class Pedateador extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"El DNI debe tener 8 dígitos, ",Toast.LENGTH_LONG).show();
                         }else if(db.miIdSucursal().length()!=3){
 
-                            Toast.makeText(getApplicationContext(),"PDA no Activo"+"|"+db.miIdSucursal(),Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(),"PDA no Activo, Sincronizar!!!!" +
+                                    "",Toast.LENGTH_LONG).show();
 
-                        }else if(codPDA.equalsIgnoreCase(idvigilante)){
+                        }else if(db.areaVigilante(idvigilante).equalsIgnoreCase("rrhh")){
 
-                            mensaje = "DNI " + idvigilante + " grabado";
-
+                            Toast.makeText(getApplicationContext(),"Ingresando a Modo RRHH |",Toast.LENGTH_LONG).show();
                             //Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
-                            Intent ii =new Intent(getApplicationContext(),MainInicio.class);
-                            ii.putExtra("codPDA", codPDA);
+                            Intent ii =new Intent(getApplicationContext(), Main_RRHH.class);
+                            //ii.putExtra("codPDA", codPDA);
+                            startActivity(ii);
+
+                        }else if(db.areaVigilante(idvigilante).equalsIgnoreCase("sst")){
+
+                            Toast.makeText(getApplicationContext(),"Ingresando a Modo SST",Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
+                            Intent ii =new Intent(getApplicationContext(), Main_SST.class);
+                            //ii.putExtra("codPDA", codPDA);
+                            startActivity(ii);
+
+                        }else if(db.areaVigilante(idvigilante).equalsIgnoreCase("seguridad")){
+
+                            Toast.makeText(getApplicationContext(),"Ingresando a Modo Seguridad",Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
+                            Intent ii =new Intent(getApplicationContext(), MainSeguridad.class);
+                            //ii.putExtra("codPDA", codPDA);
                             startActivity(ii);
                         }
                         else {
 
-                            Toast.makeText(getApplicationContext(),"Vigilante no reconicido"+"|"+db.miIdSucursal(),Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(),"Usuario no reconicido",Toast.LENGTH_LONG).show();
                         }
                     }
                     return true;
@@ -249,8 +264,8 @@ public class Pedateador extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_salir_login) {
+            finish();
         }
         if(id == R.id.sincronizar)
         {
@@ -259,6 +274,7 @@ public class Pedateador extends AppCompatActivity {
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             new Sincronizar(this,progressDialog).execute();
             guardarPreferenciaSincronizacion();
+            guardarPreferencias();
         }
 
         return super.onOptionsItemSelected(item);
@@ -342,7 +358,7 @@ public class Pedateador extends AppCompatActivity {
                         for(int i = 0; i<array.length(); i++)
                         {
                             JSONObject object = array.getJSONObject(i);
-                            database.saveVigilantes(object.getString("idvigilante"),object.getString("nombres"),object.getString("estado"),db);
+                            database.saveVigilantes(object.getString("idvigilante"),object.getString("nombres"),object.getString("estado"), object.getString("idarea"),db);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -374,7 +390,7 @@ public class Pedateador extends AppCompatActivity {
             sincronizarPdas(context);
             sincronizarVigilantes(context);
             try {
-                Thread.sleep(5000);
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -410,11 +426,13 @@ public class Pedateador extends AppCompatActivity {
         SharedPreferences preferencias = getSharedPreferences
                 ("datosPedateador", Context.MODE_PRIVATE);
         String idPedateador = edtVigilante.getText().toString();
+        String idAreaPedateador = db.areaVigilante(idPedateador);
         String idPDA = db.seriePda();
 
         SharedPreferences.Editor editor = preferencias.edit();
         editor.putString("idpetateador", idPedateador);
         editor.putString("idpda", idPDA);
+        editor.putString("idAreaPedateador", idAreaPedateador);
         editor.commit();
     }
 

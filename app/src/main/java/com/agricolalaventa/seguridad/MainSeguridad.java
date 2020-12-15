@@ -17,7 +17,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainInicio extends AppCompatActivity {
+public class MainSeguridad extends AppCompatActivity {
 
     private TextView tvTitInicio, tvFechaInicio;
     private EditText edtSucursal, edtPlaca;
@@ -34,7 +34,7 @@ public class MainInicio extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_inicio);
+        setContentView(R.layout.activity_seguridad);
 
         tvTitInicio = (TextView)findViewById(R.id.tvTitInicio);
         //tvFechaInicio = (TextView)findViewById(R.id.tvFechaInicio);
@@ -295,7 +295,7 @@ public class MainInicio extends AppCompatActivity {
 
     public void infoSwithc(){
         if (swOpcionTipoRegistro.isChecked()){
-            Toast.makeText(getApplicationContext(),"Switch Salida", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(),"Switch Salida", Toast.LENGTH_LONG).show();
 
             SharedPreferences preferencias = getSharedPreferences
                     ("datosTipoIS", Context.MODE_PRIVATE);
@@ -309,7 +309,7 @@ public class MainInicio extends AppCompatActivity {
             editor.commit();
 
         }else{
-            Toast.makeText(getApplicationContext(),"Switch Ingreso", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(),"Switch Ingreso", Toast.LENGTH_LONG).show();
             SharedPreferences preferencias = getSharedPreferences
                     ("datosTipoIS", Context.MODE_PRIVATE);
             String idTipoIS = "0";

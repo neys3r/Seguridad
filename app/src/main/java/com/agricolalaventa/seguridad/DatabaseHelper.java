@@ -85,7 +85,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void createVigilantes(SQLiteDatabase db)
     {
         db.execSQL("CREATE TABLE "+DBContract.TABLE_VIGILANTES+"("+DBContract.Vigilantes.IDVIGILANTE+" TEXT PRIMARY KEY,"+DBContract.Vigilantes.NOMBRES+" TEXT," +
-                ""+DBContract.Vigilantes.ESTADO+" TEXT);");
+                ""+DBContract.Vigilantes.ESTADO+" TEXT,"+DBContract.Vigilantes.IDAREA+" TEXT);");
     }
 
     public void savePdas(String id,String nombre,String idsucursal,String descsucursal, SQLiteDatabase db)
@@ -99,12 +99,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert(DBContract.TABLE_PDAS,null, contentValues);
     }
 
-    public void saveVigilantes(String idvigilante,String nombres,String estado, SQLiteDatabase db)
+    public void saveVigilantes(String idvigilante,String nombres,String estado,String idarea, SQLiteDatabase db)
     {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DBContract.Vigilantes.IDVIGILANTE,idvigilante);
         contentValues.put(DBContract.Vigilantes.NOMBRES,nombres);
         contentValues.put(DBContract.Vigilantes.ESTADO,estado);
+        contentValues.put(DBContract.Vigilantes.IDAREA,idarea);
 
         db.insert(DBContract.TABLE_VIGILANTES,null, contentValues);
     }
@@ -154,7 +155,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getNames() {
         SQLiteDatabase db = this.getReadableDatabase();
         //String sql = "SELECT id, Substr(name,32,8) as name  FROM names WHERE LENGTH(NAME) = 39 order by id";
-        String sql = "SELECT id, name, status, dni, placa, idsucursal, hostname, fecharegistro, pedateador, idtraslado, idtipo FROM " + TABLE_NAME + " WHERE LENGTH(dni) = 8 and strftime('%Y-%m-%d',fecharegistro) = strftime('%Y-%m-%d','now') order by id";
+        String sql = "SELECT id, name, status, dni, placa, idsucursal, hostname, fecharegistro, pedateador, idtraslado, idtipo FROM " + TABLE_NAME + " WHERE LENGTH(dni) = 8 and strftime('%Y-%m-%d',fecharegistro) = strftime('%Y-%m-%d','now') order by  id";
         //String sql = "SELECT * FROM " + TABLE_NAME + " WHERE LENGTH(NAME) = 39 ORDER BY " + COLUMN_ID + " ASC;";
         Cursor c = db.rawQuery(sql, null);
         return c;
@@ -233,6 +234,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public String existeVigilante(String dni){
         String lsViaje="0";
         String sql="SELECT idvigilante from vigilantes where idvigilante = '"+dni+"'";
+        SQLiteDatabase db= getReadableDatabase();
+        Cursor cursor= db.rawQuery(sql, null);
+        if(cursor.moveToFirst()){
+            do {
+                lsViaje = cursor.getString(0);
+            }while (cursor.moveToNext());
+        }
+        return lsViaje;
+    }
+
+    public String areaVigilante(String dni){
+        String lsViaje="0";
+        String sql="SELECT idarea from vigilantes where idvigilante = '"+dni+"'";
         SQLiteDatabase db= getReadableDatabase();
         Cursor cursor= db.rawQuery(sql, null);
         if(cursor.moveToFirst()){

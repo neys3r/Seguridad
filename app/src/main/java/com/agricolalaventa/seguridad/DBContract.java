@@ -28,6 +28,7 @@ public class DBContract {
         public static String IDVIGILANTE = "idvigilante";
         public static String NOMBRES = "nombres";
         public static String ESTADO = "estado";
+        public static String IDAREA = "idarea";
     }
 
 }
