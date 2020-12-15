@@ -47,16 +47,16 @@ public class NetworkStateChecker extends BroadcastReceiver {
                     do {
                         //calling the method to save the unsynced name to MySQL
                         saveName(
-                                cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_ID)),
-                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME)),
-                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DNI)),
-                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_PLACA)),
-                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IDSUCURSAL)),
-                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_HOSTNAME)),
-                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_FECHAREGISTRO)),
-                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_PEDATEADOR)),
-                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IDTRASLADO)),
-                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IDTIPO))
+                                cursor.getInt(cursor.getColumnIndex(DBContract.Checkinout.ID)),
+                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.NOMBRE)),
+                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.DNI)),
+                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDREFERENCIA)),
+                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDSUCURSAL)),
+                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.HOSTNAME)),
+                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.FECHA)),
+                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.PEDATEADOR)),
+                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDTRASLADO)),
+                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDTIPO))
                         );
                     } while (cursor.moveToNext());
                 }
@@ -64,14 +64,8 @@ public class NetworkStateChecker extends BroadcastReceiver {
         }
     }
 
-    /*
-     * method taking two arguments
-     * name that is to be saved and id of the name from SQLite
-     * if the name is successfully sent
-     * we will update the status as synced in SQLite
-     * */
     private void saveName(final int id, final String name, final String dni, final String placa, final String idsucursal, final String hostname, final String fecharegistro, final String pedateador, final String idtraslado, final String idtipo ) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, MainActivity.URL_SAVE_NAME,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Main_Asistencia.URL_SAVE_NAME,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -79,10 +73,10 @@ public class NetworkStateChecker extends BroadcastReceiver {
                             JSONObject obj = new JSONObject(response);
                             if (!obj.getBoolean("error")) {
                                 //updating the status in sqlite
-                                db.updateNameStatus(id, MainActivity.NAME_SYNCED_WITH_SERVER);
+                                db.updateNameStatus(id, Main_Asistencia.NAME_SYNCED_WITH_SERVER);
 
                                 //sending the broadcast to refresh the list
-                                context.sendBroadcast(new Intent(MainActivity.DATA_SAVED_BROADCAST));
+                                context.sendBroadcast(new Intent(Main_Asistencia.DATA_SAVED_BROADCAST));
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

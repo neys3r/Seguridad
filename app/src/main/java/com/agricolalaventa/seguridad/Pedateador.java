@@ -59,23 +59,6 @@ public class Pedateador extends AppCompatActivity {
         btnVerificarVigilante = (Button)findViewById(R.id.btnVerificarVigilante);
         tvSincronizacion = (TextView)findViewById(R.id.tvSincronizacion);
 
-        //Radio Button
-        //radio_tipo = (RadioGroup) findViewById(R.id.radio_tipo);
-       // radio_ingreso = (RadioButton)findViewById(R.id.radio_ingreso);
-       // radio_salida = (RadioButton)findViewById(R.id.radio_salida);
-
-/*
-        // Jalar Info Sharedpreference
-        /*SharedPreferences preferences = getSharedPreferences("datosPedateador", Context.MODE_PRIVATE);
-        edtVigilante.setText(preferences.getString("dniPedateador", ""));
-
-        // Declarar Info Sharedpreference
-        SharedPreferences preferencias = getSharedPreferences("datosPedateador", Context.MODE_PRIVATE);
-        SharedPreferences.Editor Obj_editor = preferencias.edit();
-        Obj_editor.putString("dniPedateador", edtVigilante.getText().toString());
-        Obj_editor.commit();
-
-*/
         // Impedir Ingreso manual de DNI
         edtVigilante.setInputType(InputType.TYPE_NULL);
         cargarPreferenciasSync();
@@ -117,27 +100,6 @@ public class Pedateador extends AppCompatActivity {
                 longitud = edtVigilante.getText().toString().length();
                 idvigilante = db.existeVigilante(codPDA);
 
-                // SharedPreferences
-                /*SharedPreferences preferencias = getSharedPreferences("datos", Context.MODE_PRIVATE);
-                SharedPreferences.Editor Obj_editor = preferencias.edit();
-                Obj_editor.putString("dni", edtVigilante.getText().toString());
-                Obj_editor.commit();*/
-
-                // Verificar check
-/*
-                if (radio_ingreso.isChecked() == true){
-                    tipoIS = "0";
-                    descIS = "Ingreso";
-                } else if (radio_salida.isChecked() == true){
-                    tipoIS = "1";
-                    descIS = "Salida";
-                }else{
-                    tipoIS = "9";
-                    descIS = "Otros";
-                }
-*/
-
-
                 if(codPDA.isEmpty()){
                     Toast.makeText(getApplicationContext(),"Ingrese un DNI",Toast.LENGTH_LONG).show();
 
@@ -150,7 +112,7 @@ public class Pedateador extends AppCompatActivity {
                         mensaje = "DNI " + idvigilante + " grabado";
 
                         //Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
-                        Intent i =new Intent(getApplicationContext(), MainSeguridad.class);
+                        Intent i =new Intent(getApplicationContext(), Main_Seguridad.class);
                         i.putExtra("codPDA", codPDA);
                         startActivity(i);
                     }
@@ -176,18 +138,6 @@ public class Pedateador extends AppCompatActivity {
                     idvigilante = db.existeVigilante(codPDA);
 
                     guardarPreferencias();
-                    // Verificar check
-/*
-                    if (radio_ingreso.isChecked() == true){
-                        tipoIS = "0";
-                        descIS = "Ingreso";
-                    } else if (radio_salida.isChecked() == true){
-                        tipoIS = "1";
-                        descIS = "Salida";
-                    }else{
-                        tipoIS = "9";
-                        descIS = "Otros";
-                    }*/
 
                     if(codPDA.isEmpty()){
                         Toast.makeText(getApplicationContext(),"Ingrese un DNI",Toast.LENGTH_LONG).show();
@@ -221,7 +171,7 @@ public class Pedateador extends AppCompatActivity {
 
                             Toast.makeText(getApplicationContext(),"Ingresando a Modo Seguridad",Toast.LENGTH_LONG).show();
                             //Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
-                            Intent ii =new Intent(getApplicationContext(), MainSeguridad.class);
+                            Intent ii =new Intent(getApplicationContext(), Main_Seguridad.class);
                             //ii.putExtra("codPDA", codPDA);
                             startActivity(ii);
                         }
@@ -258,12 +208,7 @@ public class Pedateador extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_salir_login) {
             finish();
         }
@@ -412,15 +357,6 @@ public class Pedateador extends AppCompatActivity {
             //readContactos(context);
         }
     }
-
-    // Obtener N° Serie PDA
-    /*private String seriePda(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return Build.getSerial();
-        }else{
-            return Build.SERIAL;
-        }
-    }*/
 
     private void guardarPreferencias(){
         SharedPreferences preferencias = getSharedPreferences

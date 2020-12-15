@@ -17,7 +17,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainSeguridad extends AppCompatActivity {
+public class Main_Seguridad extends AppCompatActivity {
 
     private TextView tvTitInicio, tvFechaInicio;
     private EditText edtSucursal, edtPlaca;
@@ -182,7 +182,7 @@ public class MainSeguridad extends AppCompatActivity {
                                 mensaje = "Placa " + placaBus + "en Sede "+ idSucursal +" grabado ";
                                 Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
 
-                                Intent a1 =new Intent(getApplicationContext(),MainActivity.class);
+                                Intent a1 =new Intent(getApplicationContext(), Main_Asistencia.class);
                                 a1.putExtra("placaBus", placaBus);
                                 //a1.putExtra("idSucursal", idSucursal);
                                 //a1.putExtra("dscSucursal", dscSucursal);
@@ -199,7 +199,7 @@ public class MainSeguridad extends AppCompatActivity {
                                 mensaje = "Moto en Sede "+ idSucursal +" grabado ";
                                 Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
 
-                                Intent a2 =new Intent(getApplicationContext(),MainActivity.class);
+                                Intent a2 =new Intent(getApplicationContext(), Main_Asistencia.class);
                                 a2.putExtra("placaBus", "MMMMMM");
                                 //a2.putExtra("idSucursal", idSucursal);
                                 //a2.putExtra("dscSucursal", dscSucursal);
@@ -219,7 +219,7 @@ public class MainSeguridad extends AppCompatActivity {
                                 mensaje = "Placa " + placaBus + "en Sede "+ idSucursal +" grabado ";
                                 Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
 
-                                Intent a3 =new Intent(getApplicationContext(),MainActivity.class);
+                                Intent a3 =new Intent(getApplicationContext(), Main_Asistencia.class);
                                 a3.putExtra("placaBus", placaBus);
                                 //a3.putExtra("idSucursal", idSucursal);
                                 //a3.putExtra("dscSucursal", dscSucursal);
@@ -234,7 +234,7 @@ public class MainSeguridad extends AppCompatActivity {
                             mensaje = "Lista de Personal  " + "en Sede "+ idSucursal +" grabado ";
                             Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
 
-                            Intent a4 =new Intent(getApplicationContext(),MainActivity.class);
+                            Intent a4 =new Intent(getApplicationContext(), Main_Asistencia.class);
                             a4.putExtra("placaBus", "PPPPPP");
                             //a4.putExtra("idSucursal", idSucursal);
                             //a4.putExtra("dscSucursal", dscSucursal);

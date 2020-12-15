@@ -11,7 +11,7 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="16dp"
-    tools:context=".MainActivity">
+    tools:context=".Main_Asistencia">
 
 
 

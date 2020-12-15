@@ -40,21 +40,5 @@ public class an_reporteplaca extends AppCompatActivity {
         ListAdapter adapter = new SimpleAdapter(an_reporteplaca.this, userList, R.layout.ln_reporteplaca_det,new String[]{"placa","cantidad"}, new int[]{R.id.tvRPlacaD, R.id.tvRPlacaC});
         lv.setAdapter(adapter);
 
-
-
-
-
-         /*
-        //tvTotReporteRegS.setText(db.totalSimple());
-
-        /*btnRegSimple.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i =new Intent(getApplicationContext(),an_registrosimple.class);
-                startActivity(i);
-            }
-        });*/
-
-
     }
 }

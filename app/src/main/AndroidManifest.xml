@@ -33,8 +33,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainSeguridad" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".Main_Seguridad" />
+        <activity android:name=".Main_Asistencia" />
 
         <receiver android:name=".NetworkStateChecker">
             <intent-filter>

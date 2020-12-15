@@ -42,9 +42,6 @@ public class NameAdapter extends ArrayAdapter<Name> {
         //setting the name to textview
         textViewName.setText(name.getName());
 
-        //if the synced status is 0 displaying
-        //queued icon
-        //else displaying synced icon
         if (name.getStatus() == 0)
             imageViewStatus.setBackgroundResource(R.drawable.stopwatch);
         else

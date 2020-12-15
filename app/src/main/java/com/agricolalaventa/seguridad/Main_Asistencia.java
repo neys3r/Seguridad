@@ -39,7 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class Main_Asistencia extends AppCompatActivity implements View.OnClickListener {
 
     private String placaBus, mensaje, idSucursal, dscSucursal, conteo, tipoIngreso;
 
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_asistencia);
 
         registerReceiver(new NetworkStateChecker(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
@@ -131,16 +131,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     do {
                         //calling the method to save the unsynced name to MySQL
                         saveNameMA(
-                                cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_ID)),
-                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME)),
-                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DNI)),
-                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_PLACA)),
-                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IDSUCURSAL)),
-                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_HOSTNAME)),
-                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_FECHAREGISTRO)),
-                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_PEDATEADOR)),
-                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IDTRASLADO)),
-                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IDTIPO))
+                                cursor.getInt(cursor.getColumnIndex(DBContract.Checkinout.ID)),
+                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.NOMBRE)),
+                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.DNI)),
+                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDREFERENCIA)),
+                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDSUCURSAL)),
+                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.HOSTNAME)),
+                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.FECHA)),
+                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.PEDATEADOR)),
+                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDTRASLADO)),
+                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDTIPO))
                         );
                     } while (cursor.moveToNext());
                 }
@@ -229,16 +229,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 do {
                     //calling the method to save the unsynced name to MySQL
                     saveNameMA(
-                            cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_ID)),
-                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME)),
-                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DNI)),
-                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_PLACA)),
-                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IDSUCURSAL)),
-                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_HOSTNAME)),
-                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_FECHAREGISTRO)),
-                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_PEDATEADOR)),
-                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IDTRASLADO)),
-                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IDTIPO))
+                            cursor.getInt(cursor.getColumnIndex(DBContract.Checkinout.ID)),
+                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.NOMBRE)),
+                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.DNI)),
+                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDREFERENCIA)),
+                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDSUCURSAL)),
+                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.HOSTNAME)),
+                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.FECHA)),
+                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.PEDATEADOR)),
+                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDTRASLADO)),
+                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDTIPO))
                     );
                 } while (cursor.moveToNext());
             }
@@ -266,16 +266,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (cursor.moveToFirst()) {
             do {
                 Name name = new Name(
-                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME)),
-                        cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_STATUS)),
-                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DNI)),
-                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_PLACA)),
-                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IDSUCURSAL)),
-                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_HOSTNAME)),
-                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_FECHAREGISTRO)),
-                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_PEDATEADOR)),
-                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IDTRASLADO)),
-                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_IDTIPO))
+                        cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.NOMBRE)),
+                        cursor.getInt(cursor.getColumnIndex(DBContract.Checkinout.STATUS)),
+                        cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.DNI)),
+                        cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDREFERENCIA)),
+                        cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDSUCURSAL)),
+                        cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.HOSTNAME)),
+                        cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.FECHA)),
+                        cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.PEDATEADOR)),
+                        cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDTRASLADO)),
+                        cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDTIPO))
                 );
                 names.add(name);
             } while (cursor.moveToNext());
@@ -422,7 +422,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         //Toast.makeText(getApplicationContext(),"PResione",Toast.LENGTH_LONG).show();
-        Intent i =new Intent(getApplicationContext(), MainSeguridad.class);
+        Intent i =new Intent(getApplicationContext(), Main_Seguridad.class);
         startActivity(i);
 
     }
@@ -458,32 +458,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         finishAffinity();
     }
 
-   /* @Override
-    protected void onDestroy() {
-
-        // SharedPreferences
-        SharedPreferences preferencias = getSharedPreferences("datos", Context.MODE_PRIVATE);
-        SharedPreferences.Editor Obj_editor = preferencias.edit();
-        Obj_editor.putString("dni", "");
-        Obj_editor.commit();
-
-        super.onDestroy();
-        super.onPause();
-        finishAffinity();
-
-
-    }*/
-
-
-
-
-
-
-
-
-
     private void saveNameMA(final int id, final String name, final String dni, final String placa, final String idsucursal, final String hostname, final String fecharegistro, final String pedateador, final String idtraslado, final String idtipo ) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, MainActivity.URL_SAVE_NAME,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Main_Asistencia.URL_SAVE_NAME,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -491,10 +467,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             JSONObject obj = new JSONObject(response);
                             if (!obj.getBoolean("error")) {
                                 //updating the status in sqlite
-                                db.updateNameStatus(id, MainActivity.NAME_SYNCED_WITH_SERVER);
+                                db.updateNameStatus(id, Main_Asistencia.NAME_SYNCED_WITH_SERVER);
 
                                 //sending the broadcast to refresh the list
-                                context.sendBroadcast(new Intent(MainActivity.DATA_SAVED_BROADCAST));
+                                context.sendBroadcast(new Intent(Main_Asistencia.DATA_SAVED_BROADCAST));
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
