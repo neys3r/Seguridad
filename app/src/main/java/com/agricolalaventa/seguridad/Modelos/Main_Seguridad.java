@@ -93,7 +93,7 @@ public class Main_Seguridad extends AppCompatActivity {
                     edtPlaca.setHint("Placa Bus");
                     //placa = edtPlaca.getText().toString();
                 }else if (checkedId == R.id.radio_moto){
-                    Toast.makeText(getApplicationContext(),"Moto",Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(),"Moto",Toast.LENGTH_LONG).show();
                     edtPlaca.setVisibility(View.INVISIBLE);
                     placa = "MMMMMM";
                 }else if (checkedId == R.id.radio_vehiculo){
@@ -186,7 +186,7 @@ public class Main_Seguridad extends AppCompatActivity {
 
                                 //Muestra la lista de BUS
                                 mensaje = "Moto en Sede "+ idSucursal +" grabado ";
-                                Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
+                                //Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
 
                                 Intent a2 =new Intent(getApplicationContext(), Main_Asistencia.class);
                                 //a2.putExtra("placaBus", "MMMMMM");

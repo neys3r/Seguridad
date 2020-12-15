@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.agricolalaventa.seguridad.db.DBContract;
 import com.agricolalaventa.seguridad.db.DatabaseHelper;
@@ -268,8 +269,10 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         tvConteoNS.setText(db.totalNoSync());
         // tvHostname.setText(hostname()+ " | " +fechaActual());
         tvHostname.setText(hostname());
+        cargarPreferenciasTraslado();
 
-        Cursor cursor = db.getNames();
+        Cursor cursor = db.getNames(placaBus);
+        Toast.makeText(getApplicationContext(), "placa: "+placaBus, Toast.LENGTH_LONG).show();
         if (cursor.moveToFirst()) {
             do {
                 Name registro = new Name(

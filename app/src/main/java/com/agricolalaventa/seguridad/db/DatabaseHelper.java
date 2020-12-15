@@ -128,9 +128,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public Cursor getNames() {
+    public Cursor getNames(String placa) {
+        //String prueba = "MMMMMM";
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "SELECT id, status, dni, idreferencia, idsucursal, idpda, fecha, pedateador, idtraslado, idtipo FROM " + "checkinout" + " WHERE LENGTH(dni) = 8 and strftime('%Y-%m-%d',fecha) = date('now','localtime') order by id desc";
+        String sql = "SELECT id, status, dni, idreferencia, idsucursal, idpda, fecha, pedateador, idtraslado, idtipo FROM checkinout WHERE LENGTH(dni) = 8 and strftime('%Y-%m-%d',fecha) = date('now','localtime')  and idreferencia = '"+placa+"' order by id desc";
         Cursor c = db.rawQuery(sql, null);
         return c;
     }
@@ -195,6 +196,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public String existeVigilante(String dni){
         String lsViaje="0";
         String sql="SELECT idvigilante from vigilantes where idvigilante = '"+dni+"'";
+        SQLiteDatabase db= getReadableDatabase();
+        Cursor cursor= db.rawQuery(sql, null);
+        if(cursor.moveToFirst()){
+            do {
+                lsViaje = cursor.getString(0);
+            }while (cursor.moveToNext());
+        }
+        return lsViaje;
+    }
+
+    public String TotalISTraslado(String idtipo, String idreferencia){
+        String lsViaje="0";
+        String sql="SELECT count(1) as cantidad  from checkinout where idtipo = '"+idtipo+"' and idreferencia = '"+idreferencia+"'";
+        //select count(*) as cantidad from checkinout where idtipo = '0' and idtraslado = '2'
         SQLiteDatabase db= getReadableDatabase();
         Cursor cursor= db.rawQuery(sql, null);
         if(cursor.moveToFirst()){
