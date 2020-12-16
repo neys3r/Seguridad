@@ -4,9 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -18,8 +23,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.agricolalaventa.seguridad.Modelos.Main_Asistencia;
+import com.agricolalaventa.seguridad.NetworkStateChecker;
 import com.agricolalaventa.seguridad.R;
+import com.agricolalaventa.seguridad.VolleySingleton;
+import com.agricolalaventa.seguridad.an_reporteplaca;
+import com.agricolalaventa.seguridad.db.DBContract;
 import com.agricolalaventa.seguridad.db.DatabaseHelper;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main_Seguridad extends AppCompatActivity {
 
@@ -34,12 +54,16 @@ public class Main_Seguridad extends AppCompatActivity {
     private TextView tvTipoIS, codPdaAcceso;
     private Switch swOpcionTipoRegistro;
     private DatabaseHelper db;
+    private Context context;
     //private String codPDA;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seguridad);
+
+        //RED
+        registerReceiver(new NetworkStateChecker(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
         tvTitInicio = (TextView)findViewById(R.id.tvTitInicio);
         //tvFechaInicio = (TextView)findViewById(R.id.tvFechaInicio);
@@ -121,29 +145,6 @@ public class Main_Seguridad extends AppCompatActivity {
                 //placaBus = edtPlaca.getText().toString();
                 //idSucursal = edtSucursal.getText().toString();
                 longitud = edtPlaca.getText().toString().length();
-
-                //String seleccion = spinner.getSelectedItem().toString();
-
-
-
-
-/*
-                if (seleccion.equals("Pinilla")){
-                    idSucursal = "006";
-                    dscSucursal = "Pinilla";
-                } else if (seleccion.equals("Mayorazgo")){
-                    idSucursal = "001";
-                    dscSucursal = "Mayorazgo";
-                } else if (seleccion.equals("Don Jorge")){
-                    idSucursal = "023";
-                    dscSucursal = "Don Jorge";
-                }else if(seleccion.equals("San Judas")){
-                    idSucursal = "034";
-                    dscSucursal = "San Judas";
-                }else{
-                    idSucursal = "999";
-                    dscSucursal = "Sin Sucursal";
-                }*/
 
 
                 // Seleccionar tipo de ingreso
@@ -259,6 +260,106 @@ public class Main_Seguridad extends AppCompatActivity {
 
         }
 
+    }
+
+
+    // Guardar Nombres
+    private void saveNameMA(final int id, final String dni, final String idreferencia, final String idsucursal, final String hostname, final String fecha, final String pedateador, final String idtraslado, final String idtipo ) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Main_Asistencia.URL_SAVE_NAME,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject obj = new JSONObject(response);
+                            if (!obj.getBoolean("error")) {
+                                //updating the status in sqlite
+                                db.updateNameStatus(id, Main_Asistencia.NAME_SYNCED_WITH_SERVER);
+
+                                //sending the broadcast to refresh the list
+                                context.sendBroadcast(new Intent(Main_Asistencia.DATA_SAVED_BROADCAST));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("dni", dni);
+                params.put("idreferencia", idreferencia);
+                params.put("idsucursal", idsucursal);
+                params.put("hostname", hostname);
+                params.put("fecha", fecha);
+                params.put("pedateador", pedateador);
+                params.put("idtraslado", idtraslado);
+                params.put("idtipo", idtipo);
+                return params;
+            }
+        };
+
+        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+    }
+
+    // Menús
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_seguridad, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.sync_seguridad) {
+            Cursor cursor = db.getUnsyncedNames();
+            //tvTotalSync.setText(db.totalSync()+"/"+db.totalDiario());
+            //Toast.makeText(getApplicationContext(),"Prueba", Toast.LENGTH_LONG).show();
+            //NetworkStateChecker netw = nt.saveName();
+            if (cursor.moveToFirst()) {
+                do {
+                    //calling the method to save the unsynced name to MySQL
+                    saveNameMA(
+                            cursor.getInt(cursor.getColumnIndex(DBContract.Checkinout.ID)),
+                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.DNI)),
+                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDREFERENCIA)),
+                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDSUCURSAL)),
+                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDPDA)),
+                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.FECHA)),
+                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.PEDATEADOR)),
+                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDTRASLADO)),
+                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDTIPO))
+                    );
+                } while (cursor.moveToNext());
+            }
+
+            //tvTotalSync.setText(db.totalSync()+"/"+db.totalDiario());
+            //Toast.makeText(getApplicationContext(),"Prueba2", Toast.LENGTH_LONG).show();
+            Intent i =new Intent(getApplicationContext(),Main_Seguridad.class);
+            startActivity(i);
+
+            return true;
+
+        }
+        if(id == R.id.salir_seguridad)
+        {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void infoSwithc(){

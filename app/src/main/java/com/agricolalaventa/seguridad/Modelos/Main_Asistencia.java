@@ -1,6 +1,7 @@
 package com.agricolalaventa.seguridad.Modelos;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -62,12 +63,12 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
     private NetworkStateChecker nt;
 
     //View objects
-    private Button buttonSave, btnSync, btnRepo01;
+    private Button buttonSave;
     private EditText editTextName;
     private ListView listViewNames;
-    private TextView tvFecha, tvBus, tvSucursal, tvConteoAsistencia, tvConteoPrueba, tvHostname, tvTitulo;
+    private TextView tvFecha, tvBus, tvSucursal, tvConteoAsistencia, tvTitulo;
     private String codPDA, tipoIS, descIS, idVigilante;
-    private LinearLayout linearRegistro;
+    private ConstraintLayout linearRegistro;
     private ImageView ivLogoTipo;
 
 
@@ -103,8 +104,8 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         names = new ArrayList<>();
 
         buttonSave = (Button) findViewById(R.id.buttonSave);
-        btnSync = (Button) findViewById(R.id.btnSync);
-        btnRepo01 = (Button) findViewById(R.id.btnRepo01);
+        //btnSync = (Button) findViewById(R.id.btnSync);
+        //btnRepo01 = (Button) findViewById(R.id.btnRepo01);
         editTextName = (EditText) findViewById(R.id.editTextName);
         listViewNames = (ListView) findViewById(R.id.listViewNames);
         tvTitulo = (TextView) findViewById(R.id.tvTitulo);
@@ -113,8 +114,8 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         tvSucursal = (TextView) findViewById(R.id.tvSucursal);
         tvConteoAsistencia = (TextView) findViewById(R.id.tvConteoAsistencia);
         //tvConteoPrueba = (TextView) findViewById(R.id.tvConteoPrueba);
-        tvHostname = (TextView) findViewById(R.id.tvHostname);
-        linearRegistro = (LinearLayout)findViewById(R.id.activity_main);
+        //tvHostname = (TextView) findViewById(R.id.tvHostname);
+        linearRegistro = (ConstraintLayout)findViewById(R.id.activity_main);
 
 
         //Toast.makeText(this, db.miSucursal(), Toast.LENGTH_LONG).show();
@@ -123,63 +124,18 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
 
         tvFecha.setText(fechaLectura2);
         //tvHostname.setText(hostname()+ " | " +fechaActual());
-        tvHostname.setText(hostname());
+        //tvHostname.setText(hostname());
 
         //adding click listener to button
         buttonSave.setOnClickListener(this);
 
-
-
-        btnSync.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Cursor cursor = db.getUnsyncedNames();
-                //NetworkStateChecker netw = nt.saveName();
-                if (cursor.moveToFirst()) {
-                    do {
-                        //calling the method to save the unsynced name to MySQL
-                        saveNameMA(
-                                cursor.getInt(cursor.getColumnIndex(DBContract.Checkinout.ID)),
-                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.DNI)),
-                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDREFERENCIA)),
-                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDSUCURSAL)),
-                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDPDA)),
-                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.FECHA)),
-                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.PEDATEADOR)),
-                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDTRASLADO)),
-                                cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDTIPO))
-                        );
-                    } while (cursor.moveToNext());
-                }
-            }
-        });
-
-
-
-        //idVigilante = db.existeVigilante(codPDA);
-
         //Cargar las Preferencias
         cargarPreferencias();
 
-        btnRepo01.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i =new Intent(getApplicationContext(), an_reporteplaca.class);
-                startActivity(i);
-            }
-        });
 
         idSucursal = db.miIdSucursal();
         dscSucursal = db.miDescSucursal();
 
-        // Recogemos placaBus y idSucursal de MainInicio
-        //Bundle bundle = getIntent().getExtras();
-        //idSucursal = bundle.getString("idSucursal");
-        //dscSucursal = bundle.getString("dscSucursal");
-
-        //placaBus = bundle.getString("placaBus");
-        //tipoIngreso = bundle.getString("tipoIngreso");
-        //codPDA = bundle.getString("codPDA");
         cargarPreferenciasTraslado();
 
 
@@ -273,7 +229,7 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         //cargarPreferenciasTraslado();
         //tvConteoAsistencia.setText(db.totalISTraslado(tipoIS, placaBus));
 
-        tvHostname.setText(hostname());
+        //tvHostname.setText(hostname());
         cargarPreferenciasTraslado();
         cargarTipoIS();
 
@@ -341,7 +297,7 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         //tvConteoSN.setText(db.totalSync());
         //tvConteoNS.setText(db.totalNoSync());
         //tvHostname.setText(hostname()+ " | " +fechaActual());
-        tvHostname.setText(hostname());
+        //tvHostname.setText(hostname());
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_SAVE_NAME,
                 new Response.Listener<String>() {
@@ -405,7 +361,7 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         cargarTipoIS();
         cargarPreferenciasTraslado();
         tvConteoAsistencia.setText(db.totalISTraslado(tipoIS, placaBus));
-        tvHostname.setText(hostname());
+        //tvHostname.setText(hostname());
     }
 
     // ATRIBUTOS DE DISPOSITIVO
