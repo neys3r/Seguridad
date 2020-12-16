@@ -65,7 +65,7 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
     private Button buttonSave, btnSync, btnRepo01;
     private EditText editTextName;
     private ListView listViewNames;
-    private TextView tvFecha, tvBus, tvSucursal, tvConteoSN, tvConteoNS, tvHostname, tvTitulo;
+    private TextView tvFecha, tvBus, tvSucursal, tvConteoAsistencia, tvConteoPrueba, tvHostname, tvTitulo;
     private String codPDA, tipoIS, descIS, idVigilante;
     private LinearLayout linearRegistro;
     private ImageView ivLogoTipo;
@@ -111,8 +111,8 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         tvFecha = (TextView) findViewById(R.id.tvFecha);
         tvBus = (TextView) findViewById(R.id.tvBus);
         tvSucursal = (TextView) findViewById(R.id.tvSucursal);
-        tvConteoSN = (TextView) findViewById(R.id.tvConteoSN);
-        tvConteoNS = (TextView) findViewById(R.id.tvConteoNS);
+        tvConteoAsistencia = (TextView) findViewById(R.id.tvConteoAsistencia);
+        //tvConteoPrueba = (TextView) findViewById(R.id.tvConteoPrueba);
         tvHostname = (TextView) findViewById(R.id.tvHostname);
         linearRegistro = (LinearLayout)findViewById(R.id.activity_main);
 
@@ -187,8 +187,9 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         tvSucursal.setText(dscSucursal);
 
        // tvConteo.setText(conteo);
-
-        tvConteoSN.setText(db.totalSync());
+        cargarTipoIS();
+        cargarPreferenciasTraslado();
+        tvConteoAsistencia.setText(db.totalISTraslado(tipoIS, placaBus));
         //tvConteoNS.setText(db.totalNoSync());
 
         // INICIO PRUEBAS ENTER
@@ -265,9 +266,13 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
     private void loadNames() {
         names.clear();
         // Contador
-        tvConteoSN.setText(db.totalSync());
-        tvConteoNS.setText(db.totalDiario());
+        //tvConteoSN.setText(db.totalSync());
+        //tvConteoNS.setText(db.totalDiario());
         // tvHostname.setText(hostname()+ " | " +fechaActual());
+        //cargarTipoIS();
+        //cargarPreferenciasTraslado();
+        //tvConteoAsistencia.setText(db.totalISTraslado(tipoIS, placaBus));
+
         tvHostname.setText(hostname());
         cargarPreferenciasTraslado();
         cargarTipoIS();
@@ -329,9 +334,11 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         final String idtipo = tipoIS;
         // final String name = tipoIngreso+"|"+fechaActual()+"|"+idSucursal+"|"+placaBus+"|"+editTextName.getText().toString().trim()+"|"+hostname();
 
-
+        //cargarTipoIS();
+        //cargarPreferenciasTraslado();
+        //tvConteoAsistencia.setText(db.totalISTraslado(tipoIS, placaBus));
         // Contador
-        tvConteoSN.setText(db.totalSync());
+        //tvConteoSN.setText(db.totalSync());
         //tvConteoNS.setText(db.totalNoSync());
         //tvHostname.setText(hostname()+ " | " +fechaActual());
         tvHostname.setText(hostname());
@@ -392,9 +399,12 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         names.add(n);
         refreshList();
         // Contador
-        tvConteoSN.setText(db.totalSync());
+        //tvConteoSN.setText(db.totalSync());
         //tvConteoNS.setText(db.totalNoSync());
         //tvHostname.setText(hostname()+ " | " +fechaActual());
+        cargarTipoIS();
+        cargarPreferenciasTraslado();
+        tvConteoAsistencia.setText(db.totalISTraslado(tipoIS, placaBus));
         tvHostname.setText(hostname());
     }
 
@@ -427,6 +437,9 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View view) {
         saveNameToServer();
+        cargarTipoIS();
+        cargarPreferenciasTraslado();
+        tvConteoAsistencia.setText(db.totalISTraslado(tipoIS, placaBus));
     }
 
     @Override
@@ -525,7 +538,7 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
                 ("datosTipoIS", Context.MODE_PRIVATE);
         tipoIS = preferencias.getString("idTipoIS", "No existe Info");
         descIS = preferencias.getString("descTipoIS", "No existe Info");
-        tvTitulo.setText("Registro de"+descIS);
+        tvTitulo.setText("Registro de "+descIS);
     }
 
     private void cargarPreferenciasTraslado(){
@@ -534,7 +547,6 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         placaBus = preferencias.getString("idreferencia", "No existe Info");
         tipoIngreso = preferencias.getString("idtraslado", "No existe Info");
     }
-
 
 
 

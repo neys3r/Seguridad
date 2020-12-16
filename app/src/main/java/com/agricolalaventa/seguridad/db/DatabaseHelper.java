@@ -206,9 +206,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return lsViaje;
     }
 
-    public String TotalISTraslado(String idtipo, String idreferencia){
+    public String totalISTraslado(String idtipo, String idreferencia){
         String lsViaje="0";
-        String sql="SELECT count(1) as cantidad  from checkinout where idtipo = '"+idtipo+"' and idreferencia = '"+idreferencia+"'";
+        String sql="SELECT count(1) as cantidad  from checkinout where idtipo = '"+idtipo+"' and idreferencia = '"+idreferencia+"' and strftime('%Y-%m-%d',fecha) = date('now','localtime') ";
         //select count(*) as cantidad from checkinout where idtipo = '0' and idtraslado = '2'
         SQLiteDatabase db= getReadableDatabase();
         Cursor cursor= db.rawQuery(sql, null);

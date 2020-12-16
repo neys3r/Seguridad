@@ -27,59 +27,19 @@
             android:text="Registro de Personal"
             android:textAlignment="center"
             android:textSize="20dp"
-            android:layout_weight="7"
-            android:gravity="center_horizontal" />
-
-
-        <ImageView
-            android:background="@drawable/stopwatch"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginHorizontal="10dp"/>
-
-        <ImageView
-            android:background="@drawable/success"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginHorizontal="10dp"/>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="24dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:gravity="center_horizontal" />
 
         <TextView
-            android:id="@+id/tvConteoNS"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:textAlignment="center"
-            android:background="#D80101"
-            android:textSize="24dp"
-            android:textColor="#000000"
-            android:layout_weight="7"
-            android:gravity="center_horizontal" />
-        <TextView
-            android:id="@+id/tvConteoSN"
-            android:layout_width="match_parent"
+            android:id="@+id/tvConteoAsistencia"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
             android:textAlignment="center"
             android:background="#01D816"
             android:textSize="24dp"
             android:textColor="#000000"
-            android:layout_weight="7"
+            android:layout_weight="1"
             android:gravity="center_horizontal" />
 
     </LinearLayout>
@@ -96,7 +56,7 @@
             android:text="Fecha"
             android:textAlignment="center"
             android:textColor="#000000"
-            android:textSize="15dp"
+            android:textSize="20dp"
             android:layout_weight="5"
             android:gravity="center_horizontal" />
 
@@ -122,7 +82,7 @@
             android:gravity="center_horizontal"
             android:text="Bus"
             android:textAlignment="center"
-            android:textSize="15dp" />
+            android:textSize="20dp" />
 
 
 
