@@ -325,32 +325,15 @@ public class Main_Seguridad extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.sync_seguridad) {
-            Cursor cursor = db.getUnsyncedNames();
-            //tvTotalSync.setText(db.totalSync()+"/"+db.totalDiario());
-            //Toast.makeText(getApplicationContext(),"Prueba", Toast.LENGTH_LONG).show();
-            //NetworkStateChecker netw = nt.saveName();
-            if (cursor.moveToFirst()) {
-                do {
-                    //calling the method to save the unsynced name to MySQL
-                    saveNameMA(
-                            cursor.getInt(cursor.getColumnIndex(DBContract.Checkinout.ID)),
-                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.DNI)),
-                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDREFERENCIA)),
-                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDSUCURSAL)),
-                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDPDA)),
-                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.FECHA)),
-                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.PEDATEADOR)),
-                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDTRASLADO)),
-                            cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDTIPO))
-                    );
-                } while (cursor.moveToNext());
-            }
 
+            syncOffline();
             //tvTotalSync.setText(db.totalSync()+"/"+db.totalDiario());
             //Toast.makeText(getApplicationContext(),"Prueba2", Toast.LENGTH_LONG).show();
-            Intent i =new Intent(getApplicationContext(),Main_Seguridad.class);
-            startActivity(i);
+            //Intent i =new Intent(getApplicationContext(),Main_Seguridad.class);
+            //startActivity(i);
 
+            //tvTotalSync.setText("Holas");
+            tvTotalSync.setText(db.totalSync()+"/"+db.totalDiario());
             return true;
 
         }
@@ -401,6 +384,26 @@ public class Main_Seguridad extends AppCompatActivity {
         editor.putString("idreferencia", idreferencia);
         editor.putString("idtraslado", idtraslado);
         editor.commit();
+    }
+
+    private void syncOffline(){
+        Cursor cursor = db.getUnsyncedNames();
+        if (cursor.moveToFirst()) {
+            do {
+                //calling the method to save the unsynced name to MySQL
+                saveNameMA(
+                        cursor.getInt(cursor.getColumnIndex(DBContract.Checkinout.ID)),
+                        cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.DNI)),
+                        cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDREFERENCIA)),
+                        cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDSUCURSAL)),
+                        cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDPDA)),
+                        cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.FECHA)),
+                        cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.PEDATEADOR)),
+                        cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDTRASLADO)),
+                        cursor.getString(cursor.getColumnIndex(DBContract.Checkinout.IDTIPO))
+                );
+            } while (cursor.moveToNext());
+        }
     }
 
 

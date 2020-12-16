@@ -172,7 +172,7 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
     }
 
     //Prueba de Menus
-
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -217,7 +217,7 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     private void loadNames() {
         names.clear();
