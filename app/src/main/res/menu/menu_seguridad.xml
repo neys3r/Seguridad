@@ -6,6 +6,9 @@
         android:id="@+id/sync_seguridad"
         android:title="Sincronizar" />
     <item
+        android:id="@+id/reporte_seguridad"
+        android:title="Reporte" />
+    <item
         android:id="@+id/salir_seguridad"
         android:title="Salir" />
 

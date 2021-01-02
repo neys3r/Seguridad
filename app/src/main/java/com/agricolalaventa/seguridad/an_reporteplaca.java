@@ -24,7 +24,6 @@ public class an_reporteplaca extends AppCompatActivity {
     Context context;
     private TextView tvCantTPlaca;
     private ListView repoplaca_list;
-    private Button btnRegAsistencia;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,22 +33,15 @@ public class an_reporteplaca extends AppCompatActivity {
         db          = new DatabaseHelper(context);
 
         tvCantTPlaca = (TextView)findViewById(R.id.tvCantTPlaca);
-        btnRegAsistencia = (Button) findViewById(R.id.btnRegAsistencia);
 
-
+        tvCantTPlaca.setText(db.totalDiario());
         //String userList = db.qrepo02();
         ArrayList<HashMap<String, String>> userList = db.qrepo02();
         ListView lv = (ListView) findViewById(R.id.repoplaca_list);
         ListAdapter adapter = new SimpleAdapter(an_reporteplaca.this, userList, R.layout.ln_reporteplaca_det,new String[]{"idreferencia","cantidad"}, new int[]{R.id.tvRPlacaD, R.id.tvRPlacaC});
         lv.setAdapter(adapter);
 
-        btnRegAsistencia.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i =new Intent(getApplicationContext(), Main_Asistencia.class);
-                startActivity(i);
-            }
-        });
+
 
 
     }

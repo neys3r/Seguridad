@@ -341,6 +341,12 @@ public class Main_Seguridad extends AppCompatActivity {
         {
             finish();
         }
+        if(id == R.id.reporte_seguridad)
+        {
+            Intent a1 =new Intent(getApplicationContext(), an_reporteplaca.class);
+            startActivity(a1);
+        }
+
 
         return super.onOptionsItemSelected(item);
     }

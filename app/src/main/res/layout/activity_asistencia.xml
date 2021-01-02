@@ -15,21 +15,23 @@
 
 
     <ListView
-        android:id="@+id/listViewNames"
+        android:id="@+id/listAsisSeguridad"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextName"
+        app:layout_constraintTop_toBottomOf="@+id/edtDNIAsisSeguridad"
         tools:ignore="MissingConstraints"></ListView>
 
     <EditText
-        android:id="@+id/editTextName"
+        android:id="@+id/edtDNIAsisSeguridad"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -42,16 +44,16 @@
         app:layout_constraintTop_toBottomOf="@+id/tvFecha" />
 
     <Button
-        android:id="@+id/buttonSave"
+        android:id="@+id/btnGuardarAsisSeguridad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:layout_weight="1"
         android:text="Guardar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvBus" />
+        app:layout_constraintTop_toBottomOf="@+id/swListViewAsisSeguridad" />
 
     <TextView
         android:id="@+id/tvFecha"
@@ -128,5 +130,15 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Switch
+        android:id="@+id/swListViewAsisSeguridad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:onClick="onSwitchList"
+        android:text="Mostrar Lista"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvBus" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

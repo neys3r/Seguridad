@@ -13,15 +13,15 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.format.DateFormat;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +32,6 @@ import com.agricolalaventa.seguridad.NameAdapter;
 import com.agricolalaventa.seguridad.NetworkStateChecker;
 import com.agricolalaventa.seguridad.R;
 import com.agricolalaventa.seguridad.VolleySingleton;
-import com.agricolalaventa.seguridad.an_reporteplaca;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -54,7 +53,7 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
 
 
     //public static final String URL_SAVE_NAME = "http://192.168.1.15/SqliteSync/saveName.php";
-    public static final String URL_SAVE_NAME = "http://wslaventa.agricolalaventa.com/wstest.php";
+    public static final String URL_SAVE_NAME = "http://wslaventa.agricolalaventa.com/asistencia/wsseguridad.php";
     //public static final String URL_SAVE_NAME = "http://wslaventa.agricolalaventa.com/wscampo.php";
 
     //database helper object
@@ -63,14 +62,14 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
     private NetworkStateChecker nt;
 
     //View objects
-    private Button buttonSave;
-    private EditText editTextName;
-    private ListView listViewNames;
+    private Button btnGuardarAsisSeguridad;
+    private EditText edtDNIAsisSeguridad;
+    private ListView listAsisSeguridad;
     private TextView tvFecha, tvBus, tvSucursal, tvConteoAsistencia, tvTitulo;
     private String codPDA, tipoIS, descIS, idVigilante;
     private ConstraintLayout linearRegistro;
     private ImageView ivLogoTipo;
-
+    private Switch swListViewAsisSeguridad;
 
 
     private String fechaLectura = (DateFormat.format("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis()).toString());
@@ -103,31 +102,23 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         db = new DatabaseHelper(this);
         names = new ArrayList<>();
 
-        buttonSave = (Button) findViewById(R.id.buttonSave);
-        //btnSync = (Button) findViewById(R.id.btnSync);
-        //btnRepo01 = (Button) findViewById(R.id.btnRepo01);
-        editTextName = (EditText) findViewById(R.id.editTextName);
-        listViewNames = (ListView) findViewById(R.id.listViewNames);
+        btnGuardarAsisSeguridad = (Button) findViewById(R.id.btnGuardarAsisSeguridad);
+        edtDNIAsisSeguridad = (EditText) findViewById(R.id.edtDNIAsisSeguridad);
+        listAsisSeguridad = (ListView) findViewById(R.id.listAsisSeguridad);
         tvTitulo = (TextView) findViewById(R.id.tvTitulo);
         tvFecha = (TextView) findViewById(R.id.tvFecha);
         tvBus = (TextView) findViewById(R.id.tvBus);
         tvSucursal = (TextView) findViewById(R.id.tvSucursal);
         tvConteoAsistencia = (TextView) findViewById(R.id.tvConteoAsistencia);
-        //tvConteoPrueba = (TextView) findViewById(R.id.tvConteoPrueba);
-        //tvHostname = (TextView) findViewById(R.id.tvHostname);
+        swListViewAsisSeguridad = (Switch) findViewById(R.id.swListViewAsisSeguridad);
         linearRegistro = (ConstraintLayout)findViewById(R.id.activity_main);
 
 
-        //Toast.makeText(this, db.miSucursal(), Toast.LENGTH_LONG).show();
+        edtDNIAsisSeguridad.requestFocus();
 
         cargarTipoIS();
 
         tvFecha.setText(fechaLectura2);
-        //tvHostname.setText(hostname()+ " | " +fechaActual());
-        //tvHostname.setText(hostname());
-
-        //adding click listener to button
-        buttonSave.setOnClickListener(this);
 
         //Cargar las Preferencias
         cargarPreferencias();
@@ -142,16 +133,15 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         tvBus.setText(placaBus);
         tvSucursal.setText(dscSucursal);
 
-       // tvConteo.setText(conteo);
         cargarTipoIS();
         cargarPreferenciasTraslado();
         tvConteoAsistencia.setText(db.totalISTraslado(tipoIS, placaBus));
-        //tvConteoNS.setText(db.totalNoSync());
+
 
         // INICIO PRUEBAS ENTER
 
-        editTextName.setOnClickListener(this);
-        //editTextName.setInputType(InputType.TYPE_NULL);
+        //editTextName.setOnClickListener(this);
+        //edtDNIAsisSeguridad.setInputType(InputType.TYPE_NULL);
 
 
         //calling the method to load all the stored names
@@ -169,7 +159,56 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
 
         //registering the broadcast receiver to update sync status
         registerReceiver(broadcastReceiver, new IntentFilter(DATA_SAVED_BROADCAST));
-    }
+
+        btnGuardarAsisSeguridad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String codDNI = edtDNIAsisSeguridad.getText().toString();
+                if (codDNI.length() == 8){
+                    //refreshList();
+                    saveNameToServer();
+                    loadNames();
+                    edtDNIAsisSeguridad.setText("");
+                    edtDNIAsisSeguridad.requestFocus();
+                }else{
+                    Toast.makeText(getApplicationContext(), "El DNI debe tener 8 dígitos", Toast.LENGTH_LONG).show();
+                    edtDNIAsisSeguridad.setText("");
+                    edtDNIAsisSeguridad.clearFocus();
+                    edtDNIAsisSeguridad.requestFocus();
+                }
+            }
+        });
+
+        // Enter edtDNIAsisSeguridad
+
+        edtDNIAsisSeguridad.setOnKeyListener(new View.OnKeyListener() {
+
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                String codDNI = edtDNIAsisSeguridad.getText().toString();
+                if((keyEvent.getAction()==KeyEvent.ACTION_DOWN ) && (i==KeyEvent.KEYCODE_ENTER)  ){
+
+                    if (codDNI.length() == 8){
+                        //refreshList();
+                        saveNameToServer();
+                        loadNames();
+                        edtDNIAsisSeguridad.setText("");
+                        edtDNIAsisSeguridad.requestFocus();
+                    }else{
+                        Toast.makeText(getApplicationContext(), "El DNI debe tener 8 dígitos", Toast.LENGTH_LONG).show();
+                        edtDNIAsisSeguridad.setText("");
+                        edtDNIAsisSeguridad.clearFocus();
+                        edtDNIAsisSeguridad.requestFocus();
+                    }
+                    edtDNIAsisSeguridad.setText("");
+                    edtDNIAsisSeguridad.clearFocus();
+                    edtDNIAsisSeguridad.requestFocus();
+                    return true;
+                    }
+                return false;
+                }
+            });
+        }
 
     //Prueba de Menus
 /*
@@ -234,7 +273,7 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         cargarTipoIS();
 
         Cursor cursor = db.getNames(placaBus, tipoIS);
-        Toast.makeText(getApplicationContext(), "placa: "+placaBus+tipoIS, Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), "placa: "+placaBus+tipoIS, Toast.LENGTH_LONG).show();
         if (cursor.moveToFirst()) {
             do {
                 Name registro = new Name(
@@ -254,7 +293,7 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         }
 
         nameAdapter = new NameAdapter(this, R.layout.names, names);
-        listViewNames.setAdapter(nameAdapter);
+        listAsisSeguridad.setAdapter(nameAdapter);
     }
 
     /*
@@ -280,7 +319,7 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
 
         //final String name = fechaActual()+"|"+idSucursal+"|"+placaBus+"|"+tipoIngreso+"|"+tipoIS+"|"+codPDA+"|"+editTextName.getText().toString().trim()+"|"+hostname();
         //final String name = editTextName.getText().toString().trim();
-        final String dni = editTextName.getText().toString().trim();
+        final String dni = edtDNIAsisSeguridad.getText().toString().trim();
         final String idreferencia = placaBus;
         final String idsucursal = idSucursal;
         final String idpda = hostname();
@@ -347,8 +386,9 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
     }
 
     //saving the name to local storage
+
     private void saveNameToLocalStorage(int status, String dni, String idreferencia, String idsucursal, String idpda, String fecha, String pedateador, String idtraslado, String idtipo) {
-        editTextName.setText("");
+        edtDNIAsisSeguridad.setText("");
 
         db.addName(status, dni, idreferencia, idsucursal, idpda, fecha, pedateador, idtraslado, idtipo);
         Name n = new Name(status, dni, idreferencia, idsucursal, idpda, fecha, pedateador, idtraslado, idtipo);
@@ -363,6 +403,7 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
         tvConteoAsistencia.setText(db.totalISTraslado(tipoIS, placaBus));
         //tvHostname.setText(hostname());
     }
+
 
     // ATRIBUTOS DE DISPOSITIVO
     public String fabricante(){
@@ -505,6 +546,22 @@ public class Main_Asistencia extends AppCompatActivity implements View.OnClickLi
     }
 
 
+    public void onSwitchList(View view) {
+        if (view.getId()==R.id.swListViewAsisSeguridad){
+            infoSwithcList();
 
+        }
+    }
 
+    private void infoSwithcList() {
+        if (swListViewAsisSeguridad.isChecked()){
+            listAsisSeguridad.setVisibility(View.VISIBLE);
+            edtDNIAsisSeguridad.setText("");
+            edtDNIAsisSeguridad.requestFocus();
+        }else{
+            listAsisSeguridad.setVisibility(View.GONE);
+            edtDNIAsisSeguridad.setText("");
+            edtDNIAsisSeguridad.requestFocus();
+        }
+    }
 }
